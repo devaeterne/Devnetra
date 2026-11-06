@@ -16,7 +16,7 @@ export const assetRegistry = {
     id: 'kids.robot.3d',
     source: 'Devnetra original Mimo mascot — parametric source included',
     sourceUrl: 'https://devnetra.dev',
-    license: 'CC0', format: 'glb', version: '1.0.0',
+    license: 'CC0', format: 'glb', version: '1.1.0',
     status: 'available', bundledPath: '/assets/characters/devnetra-mimo.glb', fallback: 'kids.robot.fallback',
   },
   'kids.robot.fallback': {

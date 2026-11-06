@@ -11,20 +11,20 @@ import numpy as np
 import trimesh
 
 PALETTE = {
-    "shell": "#B9ACFF",       # lavender
-    "shell_lit": "#DED6FF",
-    "body": "#7ED9F5",        # sky blue
-    "body_shadow": "#459CCA",
-    "face": "#28366F",        # dark navy visor
+    "shell": "#9676FF",       # lavender
+    "shell_lit": "#CBB8FF",
+    "body": "#29D7F4",        # sky blue
+    "body_shadow": "#129CCB",
+    "face": "#272E6A",        # dark navy visor
     "eye": "#FFFFFF",
     "pupil": "#182D5B",
     "glint": "#FFFFFF",
-    "cheek": "#FF9BC6",
+    "cheek": "#FF70B4",
     "smile": "#FFFFFF",
-    "sun": "#FFD665",        # lemon yellow
-    "antenna": "#7F70D2",
-    "sole": "#5865B8",
-    "heart": "#FF8DB9",
+    "sun": "#FFE044",        # lemon yellow
+    "antenna": "#7B5EDF",
+    "sole": "#5058BA",
+    "heart": "#FF56A1",
 }
 
 def rgba(code):

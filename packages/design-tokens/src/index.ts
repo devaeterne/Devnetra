@@ -23,3 +23,17 @@ export const tokens = {
   },
 } as const;
 export type ThemeName = keyof typeof tokens.themes;
+
+/** Kids 3D studio lights: independent of game logic. Intensity slider scales these defaults. */
+export const mimoLighting = {
+  ambient: 0.65,
+  hemisphere: 0.90,
+  key: 1.45,
+  lavenderRim: 9,
+  cyanFill: 7,
+  sky: '#FFF4FF',
+  ground: '#CCEFFF',
+  keyColor: '#FFF6E5',
+  lavenderColor: '#E6A9FF',
+  cyanColor: '#7BF5FF',
+} as const;

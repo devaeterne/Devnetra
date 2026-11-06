@@ -8,12 +8,12 @@
       "sourceFile": "scripts/build-kids-mascot.py",
       "license": "CC0-1.0",
       "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "format": "glb",
       "path": "apps/kids-web/public/assets/characters/devnetra-mimo.glb",
       "publicUrl": "/assets/characters/devnetra-mimo.glb",
-      "sha256": "a5b8d725efb1de7de651c908c1bdf40c6dc8a47b581b25c3ac809b670a48cf20",
-      "sizeBytes": 540980,
+      "sha256": "b616d3336a85334598381f9e1ed7634af79cf57efcdcbe85fa46b10544646ded",
+      "sizeBytes": 540968,
       "fallback": "kids.robot.fallback",
       "status": "available"
     }

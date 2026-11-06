@@ -31,5 +31,11 @@ assert.match(assetSource,/status: 'available', bundledPath: '\/assets\/character
 assert.match(read('packages/characters/src/index.tsx'),/DvCharacter/);
 assert.match(app,/DvCharacter3D/);
 assert.equal(entry.name,'@devnetra/assets');
+const controller=read('packages/characters/src/animation.ts');
+for(const motion of ['idle','wave','think','happy','celebrate','walk','blink','oops','sleep']) assert.ok(controller.includes("'"+motion+"'"),motion+' animation missing');
+assert.match(read('apps/kids-web/src/components/mimo-canvas.tsx'),/useFrame/);
+assert.match(read('apps/kids-web/src/components/mimo-canvas.tsx'),/mimoLighting/);
+assert.match(read('apps/kids-web/src/app/dev/characters/page.tsx'),/notFound/);
+assert.match(read('apps/kids-web/src/components/dv-character-3d.tsx'),/prefers-reduced-motion/);
 assert.ok(!fs.existsSync(path.join(root,'.github/workflows')),'hosted CI forbidden');
 console.log('UI-CONTRACTS-PASS: rules, design tokens, icon and mascot registry, asset status, no hosted CI');

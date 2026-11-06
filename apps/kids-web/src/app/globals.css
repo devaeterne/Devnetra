@@ -9,10 +9,18 @@ body{font-family:system-ui,-apple-system,sans-serif;margin:0;background:var(--dv
 .dv-track{margin-top:18px;color:var(--dv-muted);font-size:.9rem}
 @media(max-width:700px){.dv-hero__panel{grid-template-columns:1fr;text-align:center}.dv-hero__panel>div:last-child{grid-row:1;justify-self:center}.dv-actions{justify-content:center}.dv-subtitle{margin:auto}}
 
-.dv-mimo{position:relative;width:290px;max-width:100%;height:330px;display:grid;place-items:center}
-.dv-mimo__viewer{position:absolute;inset:0;z-index:1;transition:opacity .2s ease}
+.dv-mimo{position:relative;width:320px;max-width:100%;height:340px;display:grid;place-items:center}
+.dv-mimo__viewer{position:absolute;inset:0;z-index:1}
+.dv-mimo__viewer canvas{display:block;touch-action:pan-y}
 .dv-mimo__fallback{display:grid;place-items:center;min-height:260px}
-.dv-mimo--idle .dv-mimo__viewer{animation:dv-mimo-float 3s ease-in-out infinite alternate}
-.dv-mimo--celebrate .dv-mimo__viewer{animation:dv-mimo-float .7s ease-in-out infinite alternate}
-@keyframes dv-mimo-float{to{transform:translateY(-9px)}}
-@media(prefers-reduced-motion:reduce){.dv-mimo__viewer{animation:none!important;transition:none}}
+.dv-playground{min-height:100vh;padding:clamp(18px,4vw,48px);background:radial-gradient(circle at 80% 0%,#D9C5FF,transparent 40%),var(--dv-background)}
+.dv-playground__header{max-width:950px;margin:0 auto 22px}.dv-playground__header h1{font-size:clamp(2rem,5vw,3rem);margin:8px 0}
+.dv-playground__layout{max-width:1100px;margin:auto;display:grid;grid-template-columns:minmax(310px,1fr) minmax(350px,1.3fr);gap:24px}
+.dv-playground__stage{min-height:400px;display:grid;place-items:center;background:radial-gradient(circle at 50% 45%,#FFDDF7 0%,#C6F4FF 55%,#F5FAFF 85%);border-radius:24px}
+.dv-playground__status{font-weight:650;color:var(--dv-text)}
+.dv-playground__buttons{display:flex;flex-wrap:wrap;gap:10px}
+.dv-playground h2{font-size:1.2rem;margin:10px 0 16px}
+.dv-playground__slider{display:grid;gap:10px;margin:30px 0;font-weight:700}
+.dv-playground__slider input{width:100%;accent-color:var(--dv-primary)}
+.dv-playground__note{color:var(--dv-muted);font-size:.9rem;line-height:1.55}
+@media(max-width:760px){.dv-playground__layout{grid-template-columns:1fr}.dv-playground__stage{min-height:340px}}

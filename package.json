@@ -12,14 +12,16 @@
     "ci:contracts": "node scripts/ci-local.mjs",
     "ci:local": "pnpm ci:contracts && pnpm test:ui-contracts && pnpm test:mascot && pnpm lint && pnpm typecheck && pnpm test && pnpm build",
     "test:ui-contracts": "node scripts/test-ui-contracts.mjs",
-    "test:mascot": "node scripts/test-mascot-asset.mjs"
+    "test:mascot": "node scripts/test-mascot-asset.mjs",
+    "test:visual": "node scripts/test-mimo-browser.mjs"
   },
   "devDependencies": {
+    "@eslint/js": "^9.0.0",
+    "eslint": "^9.0.0",
+    "globals": "^16.0.0",
+    "playwright": "^1.65.0",
     "turbo": "^2.5.0",
     "typescript": "^5.9.0",
-    "eslint": "^9.0.0",
-    "@eslint/js": "^9.0.0",
-    "typescript-eslint": "^8.0.0",
-    "globals": "^16.0.0"
+    "typescript-eslint": "^8.0.0"
   }
 }

@@ -1,3 +1,4 @@
+export * from './animation.js';
 import type { HTMLAttributes } from 'react';
 import { assetRegistry } from '@devnetra/assets';
 import { DvIcon } from '@devnetra/icons';
@@ -7,7 +8,7 @@ export const characterRegistry = {
     titleKey: 'kids.robotName',
     model: 'kids.robot.3d',
     fallback: 'kids.robot.fallback',
-    animations: ['idle','celebrate'] as const,
+    animations: ['idle','wave','think','happy','celebrate','walk','blink','oops','sleep'] as const,
   },
 } as const;
 export type CharacterId = keyof typeof characterRegistry;
