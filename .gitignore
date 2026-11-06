@@ -1,0 +1,10 @@
+node_modules/
+.pnpm-store/
+.next/
+dist/
+.expo/
+.env
+.env.*
+!.env.example
+reports/ci/
+.DS_Store

@@ -1,0 +1,10 @@
+{
+  "name": "devnetra",
+  "private": true,
+  "version": "0.0.0",
+  "packageManager": "pnpm@10.0.0",
+  "scripts": {
+    "ci:local": "node scripts/ci-local.mjs",
+    "ci:contracts": "node scripts/ci-local.mjs"
+  }
+}
