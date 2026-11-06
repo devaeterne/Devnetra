@@ -4,9 +4,9 @@ Original model: https://sketchfab.com/3d-models/ai-robot-f7c4e4dcd1594e3e92b2d35
 Author: Noores (Sketchfab: nuks)
 Model ID: f7c4e4dcd1594e3e92b2d35a4ec8a93a
 Model info: downloadable, no rig, 0 animations, Sketchfab Free Standard (not CC0).
-Status: **permission pending**.
+Status: **user reports permission obtained** (2026-11-06). The actual authorized GLB and scope/evidence of public redistribution have not been received.
 
-No mesh or textures are bundled. Only the official Sketchfab iframe is used on a development-only route. The homepage still uses Mimo until rights and the model implementation are ready.
+No mesh or textures are bundled. The official Sketchfab iframe is used until the user selects a local GLB. Once selected, a Three.js editor modifies a temporary browser-only model instance; the model is not uploaded to any server or public repository. The homepage still uses Mimo until rights and the model implementation are ready.
 
 ## Why environment variables cannot hide a GLB
 
@@ -21,3 +21,11 @@ Env variables hold settings such as a model URL, not large model binaries. \`NEX
 5. Implement a model-specific runtime renderer and acceptance tests before switching the Kids homepage.
 
 Personalization preset keys are in \`packages/characters/src/personalization.ts\`; the developer preview shows planned choices but makes no false claim that the external iframe changes the mesh.
+
+## Local editable preview
+
+Go to \`/dev/characters\`, select **AI Robot candidate**, choose an authorized GLB. The file is loaded via a temporary browser Object URL and remains local to that tab. Color selections recolor mesh materials non-destructively; expressions and actions move the model's root as preliminary procedural motion. Original model was described as **not rigged** and has zero embedded clips, so limb-specific gestures and eye shape transformations are not asserted without inspecting the real GLB.
+
+The download API requires authorized Sketchfab access and returned 401 without it. No GLB was extracted or bundled.
+
+Local browser smoke test: pnpm test:ai-robot-editor. The test uses the original Devnetra Mimo GLB as a fixture, NOT the Sketchfab AI Robot model.

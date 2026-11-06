@@ -40,3 +40,8 @@ body{font-family:system-ui,-apple-system,sans-serif;margin:0;background:var(--dv
 .dv-ai-robot-preview__label{display:grid;gap:8px;max-width:300px}
 .dv-ai-robot-preview__label select{padding:12px;border:2px solid var(--dv-border);border-radius:12px;font:inherit;background:var(--dv-surface)}
 .dv-ai-robot-preview__output{display:block;margin-top:16px;font-weight:700}
+
+.dv-ai-robot-preview__canvas{height:100%;position:relative}
+.dv-ai-robot-preview__canvas canvas{touch-action:pan-y}
+.dv-ai-robot-preview__status{position:absolute;bottom:10px;left:12px;background:#172C52;color:#fff;border-radius:12px;padding:6px 12px;font-size:.85rem;pointer-events:none}
+.dv-ai-robot-preview__label input[type=file]{padding:12px;border-radius:14px;border:2px dashed var(--dv-border);width:100%}
