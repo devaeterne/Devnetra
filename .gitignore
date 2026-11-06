@@ -8,3 +8,7 @@ dist/
 !.env.example
 reports/ci/
 .DS_Store
+
+*.tsbuildinfo
+
+.turbo/

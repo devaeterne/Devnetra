@@ -11,5 +11,5 @@ check(rule.includes('DO NOT create GitHub Actions'),'local-only CI policy presen
 check(rule.includes('6–8')&&rule.includes('9–12'),'Kids age bands defined');
 const pkg=JSON.parse(fs.readFileSync(path.join(root,'package.json'),'utf8'));
 check(Boolean(pkg.scripts['ci:local']),'local CI script declared');
-let sha='unknown';try{sha=execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim()}catch{}
+let sha='unknown';try{sha=execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim()}catch{sha='unavailable'}
 process.stdout.write('Local governance contract checks PASS at commit '+sha+'\n');
