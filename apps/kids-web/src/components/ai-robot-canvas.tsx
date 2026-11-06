@@ -3,13 +3,17 @@
 import { useEffect, useRef, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import { Box3, Color, Group, MathUtils, Mesh, MeshStandardMaterial, Vector3 } from 'three';
-import { robotPalettes, type RobotPalette, type RobotExpression, type MimoAction } from '@devnetra/characters';
+import { Box3, Color, Group, MathUtils, Mesh, MeshStandardMaterial, Object3D, Quaternion, Vector3 } from 'three';
+import { robotPalettes, materialRole, aiRobotGroups, type AiRobotGroupName, type RobotPalette, type RobotExpression, type MimoAction } from '@devnetra/characters';
 
 function RobotMesh({src,palette,expression,action,onError,onLoaded}:{src:string;palette:RobotPalette;expression:RobotExpression;action:MimoAction;onError:(reason:string)=>void;onLoaded:()=>void}) {
  const [object,setObject]=useState<Group|null>(null);
  const root=useRef<Group|null>(null);
  const progress=useRef(0);
+ const nodes=useRef<Partial<Record<AiRobotGroupName,Object3D>>>({});
+ const sourceRotations=useRef<Partial<Record<AiRobotGroupName,Quaternion>>>({});
+ const rotationDelta=useRef(new Quaternion());
+ const axis=useRef(new Vector3(1,0,0));
 
  useEffect(()=>{
   let active=true;
@@ -24,23 +28,35 @@ function RobotMesh({src,palette,expression,action,onError,onLoaded}:{src:string;
    model.position.sub(center);
    const scale=2.75/Math.max(size.x,size.y,size.z);
    model.scale.setScalar(scale);
+   nodes.current={};
+   sourceRotations.current={};
+   for(const name of aiRobotGroups) {
+     const part=model.getObjectByName(name);
+     if(!part)continue;
+     nodes.current[name]=part;
+     sourceRotations.current[name]=part.quaternion.clone();
+   }
+   const required=['Head','LeftArm','RightArm','LeftWheel','RightWheel'] as const;
+   if(required.some(name=>!nodes.current[name])) {
+     onError('Missing required AI Robot part names');return;
+   }
    model.traverse(child=>{
      if(!(child instanceof Mesh))return;
      child.castShadow=true;
      child.receiveShadow=true;
-     // Non-destructive color overlays: preserve original textures and recolor selected materials.
      const colors=robotPalettes[palette];
-     const apply=(base:MeshStandardMaterial,index:number)=>{
+     const apply=(base:MeshStandardMaterial)=>{
        const m=base.clone();
-       if(index===0) m.color=new Color(colors.shell);
-       if(index===1) m.color=new Color(colors.trim);
-       m.roughness=.46;
-       m.metalness=.14;
+       const role=materialRole(base.name);
+       if(role==='shell'){m.color=new Color(colors.shell);m.roughness=.4;m.metalness=.14;}
+       else if(role==='accent'){m.color=new Color(colors.trim);m.roughness=.33;}
+       else if(role==='glow'){m.color=new Color(colors.light);m.emissive=new Color(colors.light);m.emissiveIntensity=.72;}
+       // Preserve original eye PNG and dark hand, tire and mechanical materials.
        return m;
      };
      const original=child.material;
-     if(Array.isArray(original))child.material=original.map((m,i)=>m instanceof MeshStandardMaterial?apply(m,i):m);
-     else if(original instanceof MeshStandardMaterial)child.material=apply(original,0);
+     if(Array.isArray(original))child.material=original.map(m=>m instanceof MeshStandardMaterial?apply(m):m);
+     else if(original instanceof MeshStandardMaterial)child.material=apply(original);
    });
    setObject(model);
    onLoaded();
@@ -60,15 +76,28 @@ function RobotMesh({src,palette,expression,action,onError,onLoaded}:{src:string;
   const oops=action==='oops'||expression==='oops'||expression==='surprised';
   const waving=action==='wave';
   const thinking=action==='think'||expression==='thinking';
-  const walk=action==='walk';
+  const roll=action==='walk';
   const blink=action==='blink';
   const targetY=celebrate?Math.abs(Math.sin(t*9))*.18:happy?Math.abs(Math.sin(t*6))*.07:Math.sin(now*1.3)*.035;
   root.current.position.y=MathUtils.damp(root.current.position.y,targetY,8,dt);
   root.current.rotation.z=MathUtils.damp(root.current.rotation.z,
-    oops?-.22:thinking?.13:waving?Math.sin(t*7)*.12:celebrate?Math.sin(t*9)*.18:0,8,dt);
-  root.current.rotation.y=MathUtils.damp(root.current.rotation.y,
-    walk?Math.sin(t*5)*.3:waving?Math.sin(t*2)*.12:blink?.07:0,8,dt);
-  root.current.rotation.x=MathUtils.damp(root.current.rotation.x,sleepy?.16:celebrate?-.07:0,8,dt);
+    oops?-.08:celebrate?Math.sin(t*9)*.08:0,8,dt);
+  // Animate the original named joints and preserve each source quaternion:
+  // the Sketchfab source has non-identity, axis-conversion transforms.
+  const pose=(name:AiRobotGroupName,angle:number,axisDirection:'x'|'y'|'z'='x')=>{
+    const part=nodes.current[name],initial=sourceRotations.current[name];
+    if(!part||!initial)return;
+    axis.current.set(axisDirection==='x'?1:0,axisDirection==='y'?1:0,axisDirection==='z'?1:0);
+    rotationDelta.current.setFromAxisAngle(axis.current,angle);
+    part.quaternion.slerp(initial.clone().multiply(rotationDelta.current),Math.min(1,dt*12));
+  };
+  pose('Head',sleepy?-.18:thinking?.2:oops?-.15:celebrate?-.09:0,'z');
+  pose('LeftArm',celebrate?-.75:happy?-.27:thinking?.11:0,'x');
+  pose('RightArm',celebrate?.75:waving?.45+Math.sin(t*10)*.45:happy?.27:0,'x');
+  pose('LeftWheel',roll?t*6:0,'x');
+  pose('RightWheel',roll?t*6:0,'x');
+  pose('Antenna',blink?.08*Math.sin(t*17):0,'z');
+  root.current.rotation.y=MathUtils.damp(root.current.rotation.y,roll?Math.sin(t*2)*.12:0,8,dt);
  });
  return object?<group ref={root}><primitive object={object}/></group>:null;
 }

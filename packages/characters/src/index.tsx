@@ -1,3 +1,4 @@
+export * from './ai-robot-contract.js';
 export * from './personalization.js';
 export * from './animation.js';
 import type { HTMLAttributes } from 'react';
