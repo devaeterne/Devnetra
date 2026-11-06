@@ -1,3 +1,4 @@
+export * from './personalization.js';
 export * from './animation.js';
 import type { HTMLAttributes } from 'react';
 import { assetRegistry } from '@devnetra/assets';
