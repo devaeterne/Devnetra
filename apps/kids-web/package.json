@@ -17,7 +17,10 @@
     "@devnetra/design-tokens": "workspace:*",
     "@devnetra/ui-web": "workspace:*",
     "@devnetra/icons": "workspace:*",
-    "@devnetra/characters": "workspace:*"
+    "@devnetra/characters": "workspace:*",
+    "@devnetra/assets": "workspace:*",
+    "@google/model-viewer": "^4.4.0",
+    "three": "^0.183.0"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",

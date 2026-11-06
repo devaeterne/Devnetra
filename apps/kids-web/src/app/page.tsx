@@ -2,7 +2,7 @@ import { ageBands } from '@devnetra/core';
 import { translate } from '@devnetra/localization';
 import { DvButton } from '@devnetra/ui-web';
 import { DvIcon } from '@devnetra/icons';
-import { DvCharacter } from '@devnetra/characters';
+import { DvCharacter3D } from '../components/dv-character-3d';
 
 export default function Home() {
   const locale = 'en' as const;
@@ -14,6 +14,6 @@ export default function Home() {
       <div className="dv-actions"><DvButton icon={<DvIcon name="play" size={20}/>} type="button" disabled>{translate(locale,'comingSoon')}</DvButton></div>
       <p className="dv-track">{translate(locale,'tracks',{bands:ageBands.join(' / ')})}</p>
     </div>
-    <div><DvCharacter aria-label={translate(locale,'robotName')}/></div>
+    <div><DvCharacter3D label={translate(locale,'robotName')}/></div>
   </section></main>;
 }

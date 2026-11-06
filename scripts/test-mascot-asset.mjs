@@ -1,0 +1,27 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import crypto from 'node:crypto';
+import assert from 'node:assert/strict';
+
+const root=process.cwd();
+const manifest=JSON.parse(fs.readFileSync(path.join(root,'packages/assets/manifest.json'),'utf8'));
+const mascot=manifest.assets.find(x=>x.id==='kids.robot.3d');
+assert.ok(mascot, 'Mimo missing from asset manifest');
+assert.equal(mascot.license,'CC0-1.0');
+assert.equal(mascot.status,'available');
+assert.equal(mascot.path,'apps/kids-web/public/assets/characters/devnetra-mimo.glb');
+const data=fs.readFileSync(path.join(root,mascot.path));
+assert.equal(data.toString('ascii',0,4),'glTF');
+assert.equal(data.readUInt32LE(4),2, 'glTF v2 required');
+assert.equal(data.readUInt32LE(8),data.byteLength,'GLB stated length');
+assert.equal(crypto.createHash('sha256').update(data).digest('hex'),mascot.sha256,'asset integrity mismatch');
+assert.ok(data.length<1024*1024,'model too large for Kids home (<1MB)');
+const jsonLen=data.readUInt32LE(12);
+assert.equal(data.toString('ascii',16,20),'JSON');
+const gltf=JSON.parse(data.subarray(20,20+jsonLen).toString('utf8'));
+assert.ok(gltf.meshes?.length>=40,'missing cute robot composite meshes');
+assert.equal(gltf.asset.version,'2.0');
+assert.ok(fs.existsSync(path.join(root,'scripts/build-kids-mascot.py')),'generator source missing');
+assert.ok(fs.existsSync(path.join(root,'docs/assets/mimo-cc0.md')),'license provenance missing');
+assert.ok(!fs.existsSync(path.join(root,'.github/workflows')),'no GitHub-hosted CI');
+console.log('MASCOT-GLB-PASS',data.byteLength,'bytes',gltf.meshes.length,'meshes',mascot.sha256);

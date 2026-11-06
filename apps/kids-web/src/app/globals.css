@@ -8,3 +8,11 @@ body{font-family:system-ui,-apple-system,sans-serif;margin:0;background:var(--dv
 .dv-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
 .dv-track{margin-top:18px;color:var(--dv-muted);font-size:.9rem}
 @media(max-width:700px){.dv-hero__panel{grid-template-columns:1fr;text-align:center}.dv-hero__panel>div:last-child{grid-row:1;justify-self:center}.dv-actions{justify-content:center}.dv-subtitle{margin:auto}}
+
+.dv-mimo{position:relative;width:290px;max-width:100%;height:330px;display:grid;place-items:center}
+.dv-mimo__viewer{position:absolute;inset:0;z-index:1;transition:opacity .2s ease}
+.dv-mimo__fallback{display:grid;place-items:center;min-height:260px}
+.dv-mimo--idle .dv-mimo__viewer{animation:dv-mimo-float 3s ease-in-out infinite alternate}
+.dv-mimo--celebrate .dv-mimo__viewer{animation:dv-mimo-float .7s ease-in-out infinite alternate}
+@keyframes dv-mimo-float{to{transform:translateY(-9px)}}
+@media(prefers-reduced-motion:reduce){.dv-mimo__viewer{animation:none!important;transition:none}}

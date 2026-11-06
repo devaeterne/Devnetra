@@ -10,8 +10,9 @@
     "build": "turbo run build",
     "test": "turbo run test",
     "ci:contracts": "node scripts/ci-local.mjs",
-    "ci:local": "pnpm ci:contracts && pnpm test:ui-contracts && pnpm lint && pnpm typecheck && pnpm test && pnpm build",
-    "test:ui-contracts": "node scripts/test-ui-contracts.mjs"
+    "ci:local": "pnpm ci:contracts && pnpm test:ui-contracts && pnpm test:mascot && pnpm lint && pnpm typecheck && pnpm test && pnpm build",
+    "test:ui-contracts": "node scripts/test-ui-contracts.mjs",
+    "test:mascot": "node scripts/test-mascot-asset.mjs"
   },
   "devDependencies": {
     "turbo": "^2.5.0",
