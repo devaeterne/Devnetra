@@ -12,4 +12,4 @@ reports/ci/
 *.tsbuildinfo
 
 .turbo/
-\nreports/visual/\n
+reports/visual/
