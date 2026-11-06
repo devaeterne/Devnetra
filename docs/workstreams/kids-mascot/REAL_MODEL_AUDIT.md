@@ -65,3 +65,22 @@ The audit prints names, hash, required node groups, texture/emission summary and
 ## Results
 
 **MSCT-02 static structural audit: DONE.** Runtime transform and visual QA remains for MSCT-03/06; no release or per-part visual PASS is claimed. Next: a semantic material mapper and part adapter using actual names. See `TASKS.md`.
+
+## Actual model browser verification — 2026-11-06
+
+The file is also present locally on the user's Mac at `/Users/devaeterne/Desktop/airobot/ai_robot.glb` (private, outside git). The runtime initial framing was corrected using the model's world-space bounding center multiplied by the normalization scale. Rotations must use parent-local coordinates and pre-multiply the original joint quaternion; post-multiplication rotated arms around the wrong FBX conversion axis.
+
+Verified in local Chrome/Playwright using the **real model**, not Mimo:
+
+- All five palette presets visibly recolor the shell, while the original eyes and dark mechanical parts remain distinct. Color updates do not reload the GLB.
+- Wave visibly raises one arm; Celebrate raises both arms and moves the torso.
+- Real source SHA-256 matched the audited hash; browser loaded without JavaScript exceptions.
+- Per-palette and per-action screenshots are generated locally under ignored `reports/visual/`.
+
+Re-run (local-only):
+
+```bash
+AI_ROBOT_GLB_FILE=/path/to/ai_robot.glb pnpm test:ai-robot-real
+```
+
+These are engineering QA results; child-friendly visual approval, reduced-motion and long-running motion stability still require separate acceptance. The model remains outside the public repo.

@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import { Box3, Color, Group, MathUtils, Mesh, MeshStandardMaterial, Object3D, Quaternion, Vector3 } from 'three';
+import { Box3, Group, MathUtils, Mesh, MeshStandardMaterial, Object3D, Quaternion, Vector3 } from 'three';
 import { robotPalettes, materialRole, aiRobotGroups, type AiRobotGroupName, type RobotPalette, type RobotExpression, type MimoAction } from '@devnetra/characters';
 
 function RobotMesh({src,palette,expression,action,onError,onLoaded}:{src:string;palette:RobotPalette;expression:RobotExpression;action:MimoAction;onError:(reason:string)=>void;onLoaded:()=>void}) {
@@ -25,9 +25,9 @@ function RobotMesh({src,palette,expression,action,onError,onLoaded}:{src:string;
    const size=bounds.getSize(new Vector3());
    const center=bounds.getCenter(new Vector3());
    if(!Number.isFinite(size.y)||size.y<=0){onError('The model has invalid geometry');return}
-   model.position.sub(center);
    const scale=2.75/Math.max(size.x,size.y,size.z);
    model.scale.setScalar(scale);
+   model.position.copy(center).multiplyScalar(-scale);
    nodes.current={};
    sourceRotations.current={};
    for(const name of aiRobotGroups) {
@@ -44,25 +44,35 @@ function RobotMesh({src,palette,expression,action,onError,onLoaded}:{src:string;
      if(!(child instanceof Mesh))return;
      child.castShadow=true;
      child.receiveShadow=true;
-     const colors=robotPalettes[palette];
-     const apply=(base:MeshStandardMaterial)=>{
-       const m=base.clone();
-       const role=materialRole(base.name);
-       if(role==='shell'){m.color=new Color(colors.shell);m.roughness=.4;m.metalness=.14;}
-       else if(role==='accent'){m.color=new Color(colors.trim);m.roughness=.33;}
-       else if(role==='glow'){m.color=new Color(colors.light);m.emissive=new Color(colors.light);m.emissiveIntensity=.72;}
-       // Preserve original eye PNG and dark hand, tire and mechanical materials.
-       return m;
-     };
-     const original=child.material;
-     if(Array.isArray(original))child.material=original.map(m=>m instanceof MeshStandardMaterial?apply(m):m);
-     else if(original instanceof MeshStandardMaterial)child.material=apply(original);
+     // Clone once; never mutate a shared GLTF material or alter eye textures.
+     const clone=(m:MeshStandardMaterial)=>m instanceof MeshStandardMaterial?m.clone():m;
+     if(Array.isArray(child.material))child.material=child.material.map(m=>m instanceof MeshStandardMaterial?clone(m):m);
+     else if(child.material instanceof MeshStandardMaterial)child.material=clone(child.material);
    });
    setObject(model);
    onLoaded();
   },undefined,()=>{if(active)onError('The GLB could not be read')});
   return ()=>{active=false;setObject(null)};
- },[src,palette]);
+ },[src]);
+
+ useEffect(()=>{
+   if(!object)return;
+   const colors=robotPalettes[palette];
+   object.traverse(child=>{
+     if(!(child instanceof Mesh))return;
+     const apply=(m:MeshStandardMaterial)=>{
+       if(!(m instanceof MeshStandardMaterial))return;
+       const role=materialRole(m.name);
+       if(role==='shell'){m.color.set(colors.shell);m.roughness=.4;m.metalness=.14;}
+       else if(role==='accent'){m.color.set(colors.trim);m.roughness=.33;}
+       else if(role==='glow'){m.color.set(colors.light);m.emissive.set(colors.light);m.emissiveIntensity=.72;}
+       // Eyes, hands, joints and tires keep source colors and textures.
+       m.needsUpdate=true;
+     };
+     if(Array.isArray(child.material))child.material.forEach(apply);
+     else apply(child.material);
+   });
+ },[object,palette]);
 
  useEffect(()=>{progress.current=0},[action,expression]);
  useFrame((state,dt)=>{
@@ -88,12 +98,16 @@ function RobotMesh({src,palette,expression,action,onError,onLoaded}:{src:string;
     const part=nodes.current[name],initial=sourceRotations.current[name];
     if(!part||!initial)return;
     axis.current.set(axisDirection==='x'?1:0,axisDirection==='y'?1:0,axisDirection==='z'?1:0);
+    // Convert stable world-space gesture axes into the parent's local coordinates.
+    // This avoids applying arm swings around the Sketchfab FBX conversion axes.
+    part.parent?.getWorldQuaternion(rotationDelta.current);
+    axis.current.applyQuaternion(rotationDelta.current.invert()).normalize();
     rotationDelta.current.setFromAxisAngle(axis.current,angle);
-    part.quaternion.slerp(initial.clone().multiply(rotationDelta.current),Math.min(1,dt*12));
+    part.quaternion.slerp(rotationDelta.current.multiply(initial.clone()),Math.min(1,dt*12));
   };
   pose('Head',sleepy?-.18:thinking?.2:oops?-.15:celebrate?-.09:0,'z');
-  pose('LeftArm',celebrate?-.75:happy?-.27:thinking?.11:0,'x');
-  pose('RightArm',celebrate?.75:waving?.45+Math.sin(t*10)*.45:happy?.27:0,'x');
+  pose('LeftArm',celebrate?-1.9:happy?-.65:thinking?-.25:0,'z');
+  pose('RightArm',celebrate?1.9:waving?2+Math.sin(t*11)*.2:happy?.65:0,'z');
   pose('LeftWheel',roll?t*6:0,'x');
   pose('RightWheel',roll?t*6:0,'x');
   pose('Antenna',blink?.08*Math.sin(t*17):0,'z');

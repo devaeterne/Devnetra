@@ -43,4 +43,4 @@ No open chat, child identification data, third-party trackers, free-form user sp
 
 [Asset provenance](../../assets/ai-robot-license-pending.md) · [Motion ADR](../../decisions/ADR-034-mimo-procedural-animation.md) · [Character rule](../../../.agents/rules/character-system.md) · [Asset rule](../../../.agents/rules/asset-registry.md)
 
-**Next:** MSCT-03 (in progress: model-specific part/material adapter; real-model browser acceptance pending), while MSCT-01 rights evidence is collected. See [actual GLB structural audit](REAL_MODEL_AUDIT.md).
+**Next:** MSCT-03 and MSCT-06/07 (real-model browser smoke PASS; remaining motion/controller integration and human visual certification pending), while MSCT-01 rights evidence is collected. See [actual GLB structural audit](REAL_MODEL_AUDIT.md).

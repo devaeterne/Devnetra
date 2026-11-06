@@ -15,7 +15,8 @@
     "test:mascot": "node scripts/test-mascot-asset.mjs",
     "test:visual": "node scripts/test-mimo-browser.mjs",
     "test:ai-robot-editor": "node scripts/test-ai-robot-editor.mjs",
-    "test:docs-contract": "node scripts/test-docs-contract.mjs"
+    "test:docs-contract": "node scripts/test-docs-contract.mjs",
+    "test:ai-robot-real": "node scripts/test-ai-robot-real-browser.mjs"
   },
   "devDependencies": {
     "@eslint/js": "^9.0.0",

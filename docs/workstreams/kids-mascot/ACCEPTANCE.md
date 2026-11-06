@@ -41,8 +41,8 @@ All boxes below are **unverified** until dated evidence, committed SHA and requi
 | Gate | Status | SHA | Evidence |
 |---|---|---|---|
 | G0 | OPEN / permission subtask BLOCKED | — | Real files supplied, public redistribution grant scope not archived |
-| G1 | OPEN | — | Existing editor only, original AI Robot not certified |
-| G2 | OPEN | — | Generic procedural motion only |
+| G1 | PARTIAL | — | Actual GLB renders; five palette screenshots and stable recoloring tested locally; full visual/accessibility signoff pending |
+| G2 | PARTIAL | — | Actual model wave and celebrate demonstrated; other actions, wheel physics and state-machine integration pending |
 | G3 | OPEN | — | Planned |
 | G4 | OPEN | — | Planned |
 

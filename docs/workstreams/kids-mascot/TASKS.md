@@ -10,10 +10,10 @@
 | MSCT-01 | Verify model rights, author and public redistribution permission | P0 | — | BLOCKED | G0 |
 | MSCT-02 | Real AI Robot GLB audit: hierarchy, mesh/material mapping, textures, scale, hashes | P0 | — | DONE | G0 |
 | MSCT-03 | Versioned AI Robot adapter, typed part selectors and asset registry | P0 | MSCT-01,02 | IN_PROGRESS | G0/G1 |
-| MSCT-04 | Five true independent material palettes (Ocean/Violet/Candy/Lime/Sunshine) | P0 | MSCT-02,03 | OPEN | G1 |
+| MSCT-04 | Five true independent material palettes (Ocean/Violet/Candy/Lime/Sunshine) | P0 | MSCT-02,03 | DONE | G1 |
 | MSCT-05 | Glowing eye/antenna, expressive look and bounded studio lighting | P0 | MSCT-02,03 | OPEN | G1 |
-| MSCT-06 | Real part pivots for Head/LeftArm/RightArm/LeftWheel/RightWheel | P0 | MSCT-02,03 | OPEN | G2 |
-| MSCT-07 | Implement idle, wave, happy, celebrate with clear visible differences | P0 | MSCT-06 | OPEN | G2 |
+| MSCT-06 | Real part pivots for Head/LeftArm/RightArm/LeftWheel/RightWheel | P0 | MSCT-02,03 | IN_PROGRESS | G2 |
+| MSCT-07 | Implement idle, wave, happy, celebrate with clear visible differences | P0 | MSCT-06 | IN_PROGRESS | G2 |
 | MSCT-08 | Think/oops/sleep/roll/blink and eight expression mapping | P1 | MSCT-05,07 | OPEN | G2 |
 | MSCT-09 | Action priorities, deterministic replay, cooldown, interrupt/reduced-motion | P0 | MSCT-07 | OPEN | G2 |
 | MSCT-10 | Reusable speech-bubble component, queue/replace, TTL and mobile placement | P1 | MSCT-03 | OPEN | G3 |
@@ -44,14 +44,14 @@
 
 ### MSCT-03/04/05 — Foundation · OPEN
 - [ ] Shared `AiRobotRigAdapter` with predictable part lookup, missing-node diagnostics, reset/dispose and safe source binding.
-- [ ] Atomic per-instance palette changes that do **not** tint every part or destroy textures.
+- [x] Atomic per-instance palette changes with no GLB reload; preserve eye texture and mechanical contrast. All five colors captured on real AI Robot model (awaiting approval to mark VERIFIED).
 - [ ] Separately controllable eye glow, antenna light, shell, accent and wheels.
 - [ ] Bounded illumination suitable for Kids light backgrounds; screenshot all five themes.
 - [ ] New Kids component uses existing asset registry, fallback and role/label semantics.
 
 ### MSCT-06/07/08/09 — Motion & personality · OPEN
-- [ ] Stable joint origin for both arms/head, coherent wheel rotation; no root-only fake waving.
-- [ ] Core actions: idle / wave / happy / celebrate with start, cancel, end and idle recovery.
+- [x] Real-model head and both arm pivots use world-to-parent axis conversion and baseline source quaternions; visible waving/celebration confirmed in Chrome. Wheel rotation/long-duration drift checks remain OPEN.
+- [ ] Core actions: actual-model idle/wave/celebrate preview implemented, but return-to-idle/interrupt controller integration and human motion signoff remain.
 - [ ] Secondary: thinking / surprised / sleepy / cool / oops / roll / blink/excited with actual part/eye behavior as technically possible.
 - [ ] Preserve shared action priorities; avoid repeating engine per page.
 - [ ] Verify reduced-motion, speed cap, interrupted actions, event replay and context loss; no endless drift.
@@ -75,6 +75,8 @@
 |---|---|---|
 | Existing editor (not MSCT-03 certification) | Implemented baseline | Prior `pnpm ci:local`; AI Robot editor smoke ran against Mimo GLB fixture |
 | Audit MSCT-02 | DONE, not VERIFIED | Static audit of supplied GLB: 25 meshes, 38 nodes, 18 materials, source hash recorded; see REAL_MODEL_AUDIT.md |
+| Evidence MSCT-04 | DONE, not VERIFIED | Actual AI Robot GLB tested with five palette screenshots; shell/trim change without model reload. Human visual approval pending. |
+| MSCT-06/07 | IN_PROGRESS | Actual AI Robot head/arm actions captured; reduced motion, event priority and wheel QA not yet certified. |
 | MSCT-01, 03–18 | Not verified | No actual AI Robot per-part browser certification or release approval yet |
 
 ## Progress log
@@ -84,3 +86,5 @@
 - **2026-11-06 — MSCT-02 audit:** inspected supplied actual GLB and glTF archive; model has named independent limb and wheel groups, a textured Eyes material and emissive antenna material, but no animation or skin. Reproducible source audit and SHA recorded. Source binary is not redistributed; runtime pivot validation remains MSCT-03/06.
 
 - **2026-11-06 — MSCT-03 started:** defined source-specific material roles and node-group contract. Editor now targets original Head/LeftArm/RightArm/LeftWheel/RightWheel groups, keeps baseline joint quaternions and preserves eye PNG and wheel/hand materials. Real-model browser verification and public asset delivery remain OPEN.
+
+- **2026-11-06 — Real-model Chrome QA:** located authorized local GLB at `/Users/devaeterne/Desktop/airobot/ai_robot.glb`, corrected scene framing and arm pivot quaternion multiplication, added immediate non-reloading palette changes. Ran `AI_ROBOT_GLB_FILE=/Users/devaeterne/Desktop/airobot/ai_robot.glb pnpm test:ai-robot-real`: PASS (actual GLB hash, five palette screenshots, distinct wave/celebrate, no page errors). Screenshots ignored under `reports/visual/`. Rights evidence and visual release signoff still outstanding.
