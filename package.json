@@ -10,11 +10,12 @@
     "build": "turbo run build",
     "test": "turbo run test",
     "ci:contracts": "node scripts/ci-local.mjs",
-    "ci:local": "pnpm ci:contracts && pnpm test:ui-contracts && pnpm test:mascot && pnpm lint && pnpm typecheck && pnpm test && pnpm build",
+    "ci:local": "pnpm ci:contracts && pnpm test:ui-contracts && pnpm test:docs-contract && pnpm test:mascot && pnpm lint && pnpm typecheck && pnpm test && pnpm build",
     "test:ui-contracts": "node scripts/test-ui-contracts.mjs",
     "test:mascot": "node scripts/test-mascot-asset.mjs",
     "test:visual": "node scripts/test-mimo-browser.mjs",
-    "test:ai-robot-editor": "node scripts/test-ai-robot-editor.mjs"
+    "test:ai-robot-editor": "node scripts/test-ai-robot-editor.mjs",
+    "test:docs-contract": "node scripts/test-docs-contract.mjs"
   },
   "devDependencies": {
     "@eslint/js": "^9.0.0",
