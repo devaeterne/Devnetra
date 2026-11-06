@@ -1,0 +1,2 @@
+# UI-CHAR-001 — Character System
+Kids primary mascot: cute friendly 3D robot. Single character ID kids.robot; support future multiple characters. Use DvCharacter wrapper and character registry, with explicit idle/celebrate animations. Default fallback is an accessible lightweight illustration. Full GLB asset must be independently acquired or authored and license-checked before claiming the 3D model is delivered. Real 3D playback is opt-in, lazy and reduced-motion aware; mobile always has a static fallback. No unlicensed imagery or runtime fetching arbitrary asset URLs.

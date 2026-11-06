@@ -10,7 +10,8 @@
     "build": "turbo run build",
     "test": "turbo run test",
     "ci:contracts": "node scripts/ci-local.mjs",
-    "ci:local": "pnpm ci:contracts && pnpm lint && pnpm typecheck && pnpm test && pnpm build"
+    "ci:local": "pnpm ci:contracts && pnpm test:ui-contracts && pnpm lint && pnpm typecheck && pnpm test && pnpm build",
+    "test:ui-contracts": "node scripts/test-ui-contracts.mjs"
   },
   "devDependencies": {
     "turbo": "^2.5.0",

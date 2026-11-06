@@ -1,0 +1,30 @@
+:root, [data-dv-theme='kids'] {
+  --dv-background: #F5FAFF;
+  --dv-surface: #FFFFFF;
+  --dv-surface-raised: #EAF4FF;
+  --dv-text: #152A4D;
+  --dv-muted: #445A78;
+  --dv-primary: #2453CC;
+  --dv-primary-text: #FFFFFF;
+  --dv-accent: #7A37D5;
+  --dv-success: #137A44;
+  --dv-warning: #9F5300;
+  --dv-reward: #FFD35B;
+  --dv-border: #C8DCF3;
+  --dv-focus: #2453CC;
+}
+[data-dv-theme='adult'] {
+  --dv-background: #F8FAFC;
+  --dv-surface: #FFFFFF;
+  --dv-surface-raised: #EFF4FC;
+  --dv-text: #0F172A;
+  --dv-muted: #475569;
+  --dv-primary: #2453CC;
+  --dv-primary-text: #FFFFFF;
+  --dv-accent: #6D28D9;
+  --dv-success: #15803D;
+  --dv-warning: #A16207;
+  --dv-reward: #FBBF24;
+  --dv-border: #CBD5E1;
+  --dv-focus: #2453CC;
+}

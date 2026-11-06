@@ -1,0 +1,2 @@
+# UI-ICON-001 — Icon Registry
+Lucide is the default for web and native. Use DvIcon with approved names from @devnetra/icons. Icons are decorative by default with aria-hidden; meaningful standalone icons require a localized accessible label. A screen cannot import lucide directly or embed scattered SVG icon copies. Custom icons require license, provenance and registry declaration. Sizes derive from token scale, not arbitrary px in pages.

@@ -14,7 +14,10 @@
     "react-dom": "^19.0.0",
     "@devnetra/core": "workspace:*",
     "@devnetra/localization": "workspace:*",
-    "@devnetra/design-tokens": "workspace:*"
+    "@devnetra/design-tokens": "workspace:*",
+    "@devnetra/ui-web": "workspace:*",
+    "@devnetra/icons": "workspace:*",
+    "@devnetra/characters": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",

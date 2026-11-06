@@ -1,0 +1,2 @@
+# UI-ASSET-001 — Asset provenance
+All 2D/3D game art references must have stable IDs and metadata: source name, original URL, license, version, format, bundled path and fallback. Only commit licensed assets; public repo must permit distribution. A missing 3D binary is explicitly marked pending, never represented as shipped. Lazy-load heavy media, no network retrieval on first render unless whitelisted. All assets reachable through wrappers/registry, not hardcoded routes in feature pages.

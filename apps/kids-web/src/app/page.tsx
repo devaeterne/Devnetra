@@ -1,3 +1,19 @@
 import { ageBands } from '@devnetra/core';
-import { messages } from '@devnetra/localization';
-export default function Home() {return <main><h1>Devnetra Kids</h1><p>{messages.en.kids.welcome}</p><p>Learning tracks: {ageBands.join(' / ')}</p></main>}
+import { translate } from '@devnetra/localization';
+import { DvButton } from '@devnetra/ui-web';
+import { DvIcon } from '@devnetra/icons';
+import { DvCharacter } from '@devnetra/characters';
+
+export default function Home() {
+  const locale = 'en' as const;
+  return <main className="dv-hero"><section className="dv-hero__panel">
+    <div>
+      <span className="dv-eyebrow">{translate(locale,'eyebrow')}</span>
+      <h1 className="dv-title">{translate(locale,'title')}</h1>
+      <p className="dv-subtitle">{translate(locale,'welcome')}</p>
+      <div className="dv-actions"><DvButton icon={<DvIcon name="play" size={20}/>} type="button" disabled>{translate(locale,'comingSoon')}</DvButton></div>
+      <p className="dv-track">{translate(locale,'tracks',{bands:ageBands.join(' / ')})}</p>
+    </div>
+    <div><DvCharacter aria-label={translate(locale,'robotName')}/></div>
+  </section></main>;
+}

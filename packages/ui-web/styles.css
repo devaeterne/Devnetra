@@ -1,0 +1,12 @@
+.dv-card { background:var(--dv-surface);border:2px solid var(--dv-border);border-radius:24px;padding:24px;box-shadow:0 8px 0 rgba(36,83,204,.08); }
+.dv-button {min-height:48px;min-width:48px;border-radius:9999px;display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 24px;font:inherit;font-weight:800;border:2px solid transparent;cursor:pointer;transition:transform .15s ease,box-shadow .15s ease}
+.dv-button--primary {background:var(--dv-primary);color:var(--dv-primary-text);box-shadow:0 4px 0 #183B91}
+.dv-button--secondary {background:var(--dv-reward);color:var(--dv-text);box-shadow:0 4px 0 #D5A532}
+.dv-button--ghost {background:var(--dv-surface);color:var(--dv-text);border-color:var(--dv-border)}
+.dv-button:hover {transform:translateY(-1px)}
+.dv-button:focus-visible {outline:3px solid var(--dv-focus);outline-offset:4px}
+.dv-progress {height:16px;border-radius:999px;background:var(--dv-surface-raised);overflow:hidden}
+.dv-progress__bar {height:100%;background:var(--dv-success);border-radius:inherit;transition:width .15s ease}
+@media (prefers-reduced-motion:reduce){.dv-button,.dv-progress__bar{transition:none}}
+
+.dv-button:disabled {opacity:.7;cursor:not-allowed;box-shadow:none;transform:none}

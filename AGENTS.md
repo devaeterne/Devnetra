@@ -23,3 +23,8 @@ Scope: entire monorepo. Prefer the closest app/platform rule and page contract w
 - Never commit credentials, private user records or unlicensed third-party files.
 
 See `.agents/rules/`, `.agents/platforms/`, and `design/pages/` as features are implemented.
+
+## DN-002 — UI/visual governance
+- Kids theme is playful, colorful and game-oriented; primary mascot is a friendly 3D robot with a licensed asset contract and a lightweight illustration fallback until a real model is shipped.
+- Enforce UI-001..UI-012 in `.agents/rules/ui-components.md`, icon policy in `.agents/rules/icon-system.md`, character and asset policy in corresponding files.
+- UI contract tests must be included in local `pnpm ci:local`; visual screenshots are a separate required acceptance stage and must never be represented as PASS based on static tests.
