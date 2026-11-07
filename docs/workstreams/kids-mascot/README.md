@@ -43,4 +43,4 @@ No open chat, child identification data, third-party trackers, free-form user sp
 
 [Asset provenance](../../assets/ai-robot-license-pending.md) · [Motion ADR](../../decisions/ADR-034-mimo-procedural-animation.md) · [Character rule](../../../.agents/rules/character-system.md) · [Asset rule](../../../.agents/rules/asset-registry.md)
 
-**Next:** MSCT-09/12 (event demo PASS; actual game-scoring integration pending), then MSCT-14/15 accessibility and device tests. MSCT-01 written permission evidence remains to be archived. See [actual GLB structural audit](REAL_MODEL_AUDIT.md).
+**Next:** MSCT-12 has tested a development-only 2+3 mini-lesson using the event reducer and original robot GLB; production Kids game integration remains OPEN. Continue MSCT-14/15 fallback and accessibility QA. MSCT-01 written redistribution permissions evidence remains to be archived. See [actual GLB structural audit](REAL_MODEL_AUDIT.md).

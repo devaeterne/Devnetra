@@ -2,8 +2,9 @@
 import dynamic from 'next/dynamic';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { assetRegistry } from '@devnetra/assets';
-import {type RobotPalette,type RobotExpression,robotPalettes,robotExpressions,defaultRobotPreferences,mimoActions,type MimoEvent,feedbackForEvent, type MascotLocale} from '@devnetra/characters';
-import {useMimoAnimation} from './use-mimo-animation';
+import {type RobotPalette,type RobotExpression,robotPalettes,robotExpressions,defaultRobotPreferences,mimoActions,type MimoEvent,type MascotGameEvent, type MascotLocale} from '@devnetra/characters';
+import {useMascotGameFeedback} from './use-mascot-game-feedback';
+import {MascotMiniChallenge} from './mascot-mini-challenge';
 import {MascotBubble, type MascotBubbleMessage} from './mascot-bubble';
 
 const modelId='f7c4e4dcd1594e3e92b2d35a4ec8a93a';
@@ -14,11 +15,12 @@ const expressionLabels:Record<RobotExpression,string>={happy:'Happy',thinking:'T
 export function AiRobotPreview() {
   const [palette,setPalette]=useState<RobotPalette>(defaultRobotPreferences.palette);
   const [expression,setExpression]=useState<RobotExpression>(defaultRobotPreferences.expression);
-  const animation=useMimoAnimation();
+  const animation=useMascotGameFeedback();
   const [locale,setLocale]=useState<MascotLocale>('tr');
   const [bubble,setBubble]=useState<MascotBubbleMessage|null>(null);
   const expireBubble=useCallback((id:number)=>setBubble(current=>current?.id===id?null:current),[]);
   const bubbleSeq=useRef(0);
+  const manualEventSeq=useRef(0);
   const events:ReadonlyArray<{event:MimoEvent;tr:string;en:string}>=[
     {event:'game.start',tr:'Oyuna başla',en:'Start game'},
     {event:'answer.correct',tr:'Doğru cevap',en:'Correct answer'},
@@ -27,11 +29,15 @@ export function AiRobotPreview() {
     {event:'hint.request',tr:'İpucu iste',en:'Request hint'},
     {event:'break.start',tr:'Mola',en:'Break'},
   ];
+  function triggerGameEvent(event:MascotGameEvent){
+    const decision=animation.dispatch(event);
+    if(decision.status==='accepted'&&decision.state.feedback){
+      const value=decision.state.feedback.value;
+      setBubble({id:++bubbleSeq.current,key:value.key,durationMs:value.durationMs});
+    }
+  }
   function trigger(event:MimoEvent){
-    const feedback=feedbackForEvent(event);
-    const accepted=animation.react(event);
-    // Keep speech and movement in sync when the priority engine rejects a weaker event.
-    if(accepted)setBubble({id:++bubbleSeq.current,key:feedback.key,durationMs:feedback.durationMs});
+    triggerGameEvent({id:'studio.manual'+(++manualEventSeq.current),type:event});
   }
   const [localUrl,setLocalUrl]=useState('');
   const [loaded,setLoaded]=useState(false);
@@ -74,7 +80,7 @@ export function AiRobotPreview() {
     </label>
     <h3>Motion preview</h3>
     <div className="dv-ai-robot-preview__colors" role="group" aria-label="Robot animation actions">
-     {mimoActions.map(v=><button type="button" key={v} aria-pressed={animation.action===v} onClick={()=>animation.play(v,true)}>{v}</button>)}
+     {mimoActions.map(v=><button type="button" key={v} aria-pressed={animation.action===v} onClick={()=>animation.play(v)}>{v}</button>)}
     </div>
     <h3>Game reactions & speech bubbles</h3>
     <label className="dv-ai-robot-preview__label">Message language
@@ -85,7 +91,8 @@ export function AiRobotPreview() {
     <div className="dv-ai-robot-preview__colors" role="group" aria-label="Game reaction events">
       {events.map(({event,tr,en})=><button type="button" key={event} onClick={()=>trigger(event)}>{locale==='tr'?tr:en}</button>)}
     </div>
+    <MascotMiniChallenge locale={locale} onEvent={triggerGameEvent} onReset={()=>{animation.play("idle");setBubble(null)}}/>
     <output className="dv-ai-robot-preview__output">Selected: {palette} · {expression} · {animation.action}</output>
-    <p>Expressions currently affect the robot's procedural pose, not its eye textures or facial geometry. Full facial editing requires inspecting the actual model mesh.</p>
+    <p>Expressions drive the robot's animated face texture and physical pose. This playground is developer-only; real learning products and XP are not connected yet.</p>
   </section>;
 }

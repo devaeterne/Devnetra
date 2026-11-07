@@ -53,3 +53,11 @@ body{font-family:system-ui,-apple-system,sans-serif;margin:0;background:var(--dv
 @keyframes dv-bubble-in{from{transform:translateY(9px) scale(.94);opacity:0}to{transform:translateY(0) scale(1);opacity:1}}
 @media(prefers-reduced-motion:reduce){.dv-mascot-bubble{animation:none}}
 @media(max-width:620px){.dv-mascot-bubble-slot{inset:8px 8px auto auto;max-width:60%}.dv-mascot-bubble{padding:9px 12px;font-size:1rem}}
+
+.dv-mascot-challenge{margin-top:16px;padding:18px;border:2px solid #d7c7ff;border-radius:20px;background:#fbf8ff;color:#241443}
+.dv-mascot-challenge h3{margin:0 0 8px}
+.dv-mascot-challenge__choices{display:flex;gap:10px;margin:12px 0;flex-wrap:wrap}
+.dv-mascot-challenge button{min-width:48px;min-height:44px;padding:8px 16px;border:2px solid #7552c9;background:white;color:#241443;border-radius:12px;font-weight:700;cursor:pointer}
+.dv-mascot-challenge button:hover:not(:disabled),.dv-mascot-challenge button:focus-visible{background:#eae2ff;outline-offset:3px}
+.dv-mascot-challenge button:disabled{opacity:.45;cursor:default}
+.dv-mascot-challenge__status{min-height:25px;font-weight:700}

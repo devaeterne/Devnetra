@@ -20,8 +20,8 @@
 | MSCT-11 | Localized child-friendly EN/TR bubble copy: Aferin, Harika, Süper, Try again, Think together | P1 | MSCT-10 | DONE | G3 |
 | MSCT-12 | Typed game events connecting animations, bubble and idempotent feedback | P0 | MSCT-09,11 | IN_PROGRESS | G3 |
 | MSCT-13 | Parent-approved local preference persistence, age track UX and reset | P1 | MSCT-04,08 | OPEN | G3 |
-| MSCT-14 | Accessible 2D fallback, context loss, network/mesh error and reduced motion | P0 | MSCT-03,09 | OPEN | G1/G4 |
-| MSCT-15 | Actual-model browser, visual, keyboard, device, performance and regression suite | P0 | MSCT-04..14 | OPEN | G4 |
+| MSCT-14 | Accessible 2D fallback, context loss, network/mesh error and reduced motion | P0 | MSCT-03,09 | IN_PROGRESS | G1/G4 |
+| MSCT-15 | Actual-model browser, visual, keyboard, device, performance and regression suite | P0 | MSCT-04..14 | IN_PROGRESS | G4 |
 | MSCT-16 | Public delivery + credit/attribution + Vercel Blob/CDN URL (rights-gated) | P0 | MSCT-01,15 | IN_PROGRESS | G4 |
 | MSCT-17 | Make licensed AI Robot the primary Kids homepage mascot, retain Mimo fallback | P0 | MSCT-01,15,16 | OPEN | G4 |
 | MSCT-18 | Native/mobile mascot support (separate acceptance plan) | P2 | MSCT-14 | OPEN | G4 |
@@ -104,3 +104,5 @@
 - **2026-11-07 — MSCT-06/07 motion improvements:** replaced ad hoc joint animation values with pure typed aiRobotMotionPose in packages/characters. Walk now shows bounded synchronized wheel rotation, modest body rock and arm counter-swing while anchored to the studio. Happy has balanced arm lift and bounce; celebrate has stronger two-arm lift. Reduced motion produces zero physical displacement. Real GLB Chrome screenshots for idle, roll, happy, celebrate inspected; browser motion regression and pure deterministic tests added. Long-duration device QA still pending.
 
 - **2026-11-07 — MSCT-12 preparation (review branch):** Created a typed, bounded, ephemeral mascot game-event reducer. It rejects duplicate logical event IDs, retains high-priority reactions, returns expired animations to idle, and deliberately never changes XP or child profiles. Unit tests were authored, but local `pnpm ci:local` and browser tests were **NOT RUN** because the authorized Mac is offline. Do not mark DONE/VERIFIED or merge to main before local checks and integration with actual game logic.
+
+- **2026-11-07 — MSCT-12 demo integration:** Mac connection restored. A development-only 2+3 mini learning task now sends deduplicated typed game events to the shared mascot controller for wrong/correct/hint/complete/restart; no persistent XP or child data. Branch local CI PASS (15 typechecks, 15 tests, 8 builds), reducer unit tests PASS (4), real GLB Chrome feedback regression PASS, desktop 1280 px and mobile 390 px reduced-motion mini challenge PASS. Production Kids lessons/scoring do not yet exist, so MSCT-12 stays IN_PROGRESS. MSCT-14/15 moved to IN_PROGRESS for wider accessibility/fallback/device checks.

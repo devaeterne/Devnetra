@@ -43,7 +43,7 @@ All boxes below are **unverified** until dated evidence, committed SHA and requi
 | G0 | OPEN / permission subtask BLOCKED | — | Real files supplied, public redistribution grant scope not archived |
 | G1 | PARTIAL | — | Real GLB five palettes, non-deforming UV face expressions and Eyes/antenna light mapping; visual/accessibility signoff pending |
 | G2 | PARTIAL | — | Actual model wave/happy/celebrate and in-place wheel roll demonstrated; long-duration stability, reduced-motion browser and state-machine/cooldown acceptance pending |
-| G3 | PARTIAL | — | Real GLB Chrome Studio preview PASS for EN/TR event/bubble expiry, actual game scoring and child-facing QA pending |
+| G3 | PARTIAL | — | Real GLB mini-lesson desktop/mobile reduced-motion Chrome PASS; event ID deduplication, priority, restart and EN/TR PASS. Actual production game scoring and child-facing QA pending |
 | G4 | OPEN | — | Planned |
 
 Current scripts: \`pnpm ci:local\`, \`pnpm test:mascot\`, \`pnpm test:visual\`, \`pnpm test:ai-robot-editor\`. Future real-model tests must not assume proprietary GLB can be checked into a public repo.
