@@ -41,7 +41,7 @@ All boxes below are **unverified** until dated evidence, committed SHA and requi
 | Gate | Status | SHA | Evidence |
 |---|---|---|---|
 | G0 | OPEN / permission subtask BLOCKED | — | Real files supplied, public redistribution grant scope not archived |
-| G1 | PARTIAL | — | Real GLB five palettes and expression-sensitive Eyes/antenna light mapping; visual/accessibility signoff pending |
+| G1 | PARTIAL | — | Real GLB five palettes, non-deforming UV face expressions and Eyes/antenna light mapping; visual/accessibility signoff pending |
 | G2 | PARTIAL | — | Actual model wave and celebrate demonstrated; other actions, wheel physics and state-machine integration pending |
 | G3 | PARTIAL | — | Real GLB Chrome Studio preview PASS for EN/TR event/bubble expiry, actual game scoring and child-facing QA pending |
 | G4 | OPEN | — | Planned |

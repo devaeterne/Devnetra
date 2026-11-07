@@ -4,7 +4,8 @@ import { useEffect, useRef, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { Box3, Group, MathUtils, Mesh, MeshStandardMaterial, Object3D, Quaternion, Vector3 } from 'three';
-import { robotPalettes, materialRole, aiRobotGroups, aiRobotMoodFor, aiRobotMoodLight, type AiRobotGroupName, type RobotPalette, type RobotExpression, type MimoAction } from '@devnetra/characters';
+import { robotPalettes, materialRole, aiRobotGroups, aiRobotMoodFor, aiRobotMoodLight, type AiRobotMood, type AiRobotGroupName, type RobotPalette, type RobotExpression, type MimoAction } from '@devnetra/characters';
+import {createAiRobotFace} from './ai-robot-face';
 
 function RobotMesh({src,palette,expression,action,serial,onError,onLoaded}:{src:string;palette:RobotPalette;expression:RobotExpression;action:MimoAction;serial:number;onError:(reason:string)=>void;onLoaded:()=>void}) {
  const [object,setObject]=useState<Group|null>(null);
@@ -17,6 +18,8 @@ function RobotMesh({src,palette,expression,action,serial,onError,onLoaded}:{src:
  const axis=useRef(new Vector3(1,0,0));
  const eyes=useRef<MeshStandardMaterial[]>([]);
  const antennaLights=useRef<MeshStandardMaterial[]>([]);
+ const face=useRef<ReturnType<typeof createAiRobotFace>|null>(null);
+ const previousFace=useRef<{mood:AiRobotMood;openness:number}|null>(null);
 
 
  useEffect(()=>{
@@ -36,6 +39,7 @@ function RobotMesh({src,palette,expression,action,serial,onError,onLoaded}:{src:
    sourceRotations.current={};
    eyes.current=[];
    antennaLights.current=[];
+   face.current?.dispose();face.current=null;previousFace.current=null;
 
    for(const name of aiRobotGroups) {
      const part=model.getObjectByName(name);
@@ -59,14 +63,22 @@ function RobotMesh({src,palette,expression,action,serial,onError,onLoaded}:{src:
      for(const material of parts){
        if(!(material instanceof MeshStandardMaterial))continue;
        const role=materialRole(material.name);
-       if(role==='eyes')eyes.current.push(material);
-       else if(role==='glow')antennaLights.current.push(material);
+       if(role==='eyes'){
+         eyes.current.push(material);
+         const original=material.emissiveMap??material.map;
+         if(original){
+           if(!face.current)face.current=createAiRobotFace(original);
+           material.map=face.current.texture;
+           material.emissiveMap=face.current.texture;
+           material.needsUpdate=true;
+         }
+       }else if(role==='glow')antennaLights.current.push(material);
      }
    });
    setObject(model);
    onLoaded();
   },undefined,()=>{if(active)onError('The GLB could not be read')});
-  return ()=>{active=false;setObject(null)};
+  return ()=>{active=false;face.current?.dispose();face.current=null;setObject(null)};
  },[src]);
 
  useEffect(()=>{
@@ -102,7 +114,17 @@ function RobotMesh({src,palette,expression,action,serial,onError,onLoaded}:{src:
   const t=progress.current;
   const motion=reduced.current?0:1;
   const mood=aiRobotMoodLight[aiRobotMoodFor(action,expression)];
+  const moodName=aiRobotMoodFor(action,expression);
   const pulse=1+(reduced.current?0:Math.sin(now*(action==='celebrate'?9:3.5))*mood.pulse);
+  const eyeBlink=action==='blink'&&!reduced.current
+    ?Math.max(.03,Math.abs(Math.sin(t*10))) : 1;
+  if(face.current){
+    const prior=previousFace.current;
+    if(!prior||prior.mood!==moodName||Math.abs(prior.openness-eyeBlink)>.035){
+      face.current.draw(moodName,eyeBlink);
+      previousFace.current={mood:moodName,openness:eyeBlink};
+    }
+  }
   // The original Eyes material has an emissive PNG texture. Modify intensity
   // only to preserve the pupil artwork; clone prevents global asset mutation.
   const eyeTarget=mood.eye*pulse;

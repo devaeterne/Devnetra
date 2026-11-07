@@ -52,7 +52,7 @@
 ### MSCT-06/07/08/09 — Motion & personality · OPEN
 - [x] Real-model head and both arm pivots use world-to-parent axis conversion and baseline source quaternions; visible waving/celebration confirmed in Chrome. Wheel rotation/long-duration drift checks remain OPEN.
 - [ ] Core actions: actual-model idle/wave/celebrate preview implemented, but return-to-idle/interrupt controller integration and human motion signoff remain.
-- [ ] Secondary: thinking/sleepy/oops/cool now drive typed eye and antenna brightness; head/arm reactions exist. Source Eyes mesh includes the face screen; eye-only blink requires a separate overlay/mask (do not scale the whole face). Wheel and expression QA remain open.
+- [ ] Secondary: thinking/sleepy/oops/cool now drive typed eye and antenna brightness; head/arm reactions exist. Source Eyes mesh includes the face screen; runtime 1024x1024 UV texture now supports happy/sleepy/surprised/cool/oops eye shapes and blink without scaling the mesh. Wheel/all-expression acceptance remains open.
 - [x] Reuse shared action priorities and idle timeout; game-event preview verified on real bundled GLB in Chrome.
 - [ ] Verify reduced-motion, speed cap, interrupted actions, event replay and context loss; no endless drift.
 
@@ -96,4 +96,7 @@
 - **2026-11-07 — Mascot event feedback v1:** real bundled GLB uses shared action priorities and idle recovery. Added typed EN/TR encouragement copy and accessible short-lived bubble with six developer-only game-event controls. Local Chrome test PASS for Aferin!, Harika!, English switch, priority rejection, expiry, idle return. MSCT-10/11 DONE; MSCT-09/12 IN_PROGRESS until real game integration.
 
 - **2026-11-07 — Emotional lighting:** added typed mood mapping and bounded light intensity; original textured Eyes and emissive antenna now react separately to action/expression, preserving source texture. Removed constant idle bouncing in happy preset. Browser and unit tests added; human visual approval remains open.
-\n- **2026-11-07 — Visual QA finding:** scaling Head_Eyes_0 collapses the black face panel because its source mesh includes the whole screen. Rejected that experiment. Kept original face geometry and tested mood-sensitive eye/antenna light; real independent blink remains OPEN (MSCT-08).\n
+
+- **2026-11-07 — Visual QA finding:** scaling Head_Eyes_0 collapses the black face panel because its source mesh includes the whole screen. Rejected that experiment. Kept original face geometry and tested mood-sensitive eye/antenna light; real independent blink remains OPEN (MSCT-08).
+
+- **2026-11-07 — MSCT-08 face atlas:** implemented procedural CanvasTexture for the original Head_Eyes_0 UV atlas without deforming the face screen. Happy, sleepy, surprised and blink checked with real-model Chrome screenshots. Texture is instance-local, disposed on unmount; unchanged licensed GLB. Human UX and eight-expression signoff pending.
