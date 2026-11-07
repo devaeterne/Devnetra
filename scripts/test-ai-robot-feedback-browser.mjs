@@ -1,0 +1,31 @@
+import assert from 'node:assert/strict';
+import {chromium} from 'playwright';
+const browser=await chromium.launch({channel:'chrome',headless:true,args:['--enable-webgl','--use-angle=swiftshader','--disable-gpu-sandbox']});
+try{
+ const page=await browser.newPage({viewport:{width:1180,height:820}});
+ const errors=[];page.on('pageerror',e=>errors.push(e.message));
+ const response=await page.goto('http://localhost:3000/dev/characters',{waitUntil:'domcontentloaded',timeout:20000});
+ assert.equal(response?.status(),200);
+ await page.getByRole('status').getByText('3D model loaded').waitFor({timeout:20000});
+ const events=page.getByRole('group',{name:'Game reaction events'});
+ await events.getByRole('button',{name:'Doğru cevap'}).click();
+ await page.getByText('Aferin!',{exact:true}).waitFor({timeout:3000});
+ assert.match(await page.locator('.dv-ai-robot-preview__output').innerText(),/happy/);
+ await page.waitForTimeout(1900);
+ assert.match(await page.locator('.dv-ai-robot-preview__output').innerText(),/idle/);
+ await events.getByRole('button',{name:'Görev tamamlandı'}).click();
+ await page.getByText('Harika!',{exact:true}).waitFor({timeout:3000});
+ await events.getByRole('button',{name:'Tekrar dene'}).click();
+ assert.equal(await page.locator('.dv-mascot-bubble').innerText(),'Harika!');
+ assert.match(await page.locator('.dv-ai-robot-preview__output').innerText(),/celebrate/);
+ await page.getByLabel('Message language').selectOption('en');
+ assert.equal(await page.locator('.dv-mascot-bubble').innerText(),'Amazing!');
+ await page.waitForTimeout(3300);
+ assert.equal(await page.locator('.dv-mascot-bubble').count(),0);
+ assert.match(await page.locator('.dv-ai-robot-preview__output').innerText(),/idle/);
+ await events.getByRole('button',{name:'Correct answer'}).click();
+ assert.equal(await page.locator('.dv-mascot-bubble').innerText(),'Well done!');
+ await page.screenshot({path:'reports/visual/ai-robot-feedback.png',fullPage:true});
+ assert.deepEqual(errors,[]);
+ console.log('AI_ROBOT_FEEDBACK_BROWSER_PASS: actual bundled GLB, TR/EN messages, priority, expiry/idle, screen reader status');
+}finally{await browser.close()}

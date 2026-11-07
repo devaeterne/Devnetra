@@ -10,8 +10,10 @@ export function useMimoAnimation() {
  const play=useCallback((next:MimoAction,force=false)=>{
    const now=Date.now();
    const value=transitionMimo(stateRef.current,next,now,force);
+   const accepted=value!==stateRef.current;
    stateRef.current=value;
    setState(value);
+   return accepted;
  },[]);
  const react=useCallback((event:MimoEvent)=>play(actionForEvent(event)),[play]);
  useEffect(()=>{

@@ -45,3 +45,11 @@ body{font-family:system-ui,-apple-system,sans-serif;margin:0;background:var(--dv
 .dv-ai-robot-preview__canvas canvas{touch-action:pan-y}
 .dv-ai-robot-preview__status{position:absolute;bottom:10px;left:12px;background:#172C52;color:#fff;border-radius:12px;padding:6px 12px;font-size:.85rem;pointer-events:none}
 .dv-ai-robot-preview__label input[type=file]{padding:12px;border-radius:14px;border:2px dashed var(--dv-border);width:100%}
+
+.dv-ai-robot-preview__canvas{isolation:isolate}
+.dv-mascot-bubble-slot{pointer-events:none;position:absolute;z-index:5;inset:12px 14px auto auto;max-width:min(62%,280px);min-height:38px}
+.dv-mascot-bubble{position:relative;padding:13px 18px;border:2px solid #8a61e8;background:#fff;color:#25134d;border-radius:22px 22px 4px 22px;box-shadow:0 8px 20px #2a247022;font-weight:800;text-align:center;line-height:1.3;font-size:clamp(1rem,2.4vw,1.35rem);animation:dv-bubble-in 250ms cubic-bezier(.2,.8,.2,1) both}
+.dv-mascot-bubble::after{content:'';position:absolute;bottom:-11px;right:19px;border-left:10px solid transparent;border-right:2px solid transparent;border-top:11px solid #8a61e8}
+@keyframes dv-bubble-in{from{transform:translateY(9px) scale(.94);opacity:0}to{transform:translateY(0) scale(1);opacity:1}}
+@media(prefers-reduced-motion:reduce){.dv-mascot-bubble{animation:none}}
+@media(max-width:620px){.dv-mascot-bubble-slot{inset:8px 8px auto auto;max-width:60%}.dv-mascot-bubble{padding:9px 12px;font-size:1rem}}

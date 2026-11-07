@@ -6,10 +6,11 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { Box3, Group, MathUtils, Mesh, MeshStandardMaterial, Object3D, Quaternion, Vector3 } from 'three';
 import { robotPalettes, materialRole, aiRobotGroups, type AiRobotGroupName, type RobotPalette, type RobotExpression, type MimoAction } from '@devnetra/characters';
 
-function RobotMesh({src,palette,expression,action,onError,onLoaded}:{src:string;palette:RobotPalette;expression:RobotExpression;action:MimoAction;onError:(reason:string)=>void;onLoaded:()=>void}) {
+function RobotMesh({src,palette,expression,action,serial,onError,onLoaded}:{src:string;palette:RobotPalette;expression:RobotExpression;action:MimoAction;serial:number;onError:(reason:string)=>void;onLoaded:()=>void}) {
  const [object,setObject]=useState<Group|null>(null);
  const root=useRef<Group|null>(null);
  const progress=useRef(0);
+ const reduced=useRef(false);
  const nodes=useRef<Partial<Record<AiRobotGroupName,Object3D>>>({});
  const sourceRotations=useRef<Partial<Record<AiRobotGroupName,Quaternion>>>({});
  const rotationDelta=useRef(new Quaternion());
@@ -74,12 +75,19 @@ function RobotMesh({src,palette,expression,action,onError,onLoaded}:{src:string;
    });
  },[object,palette]);
 
- useEffect(()=>{progress.current=0},[action,expression]);
+ useEffect(()=>{progress.current=0},[action,serial,expression]);
+ useEffect(()=>{
+  const media=window.matchMedia('(prefers-reduced-motion: reduce)');
+  const update=()=>{reduced.current=media.matches};
+  update();media.addEventListener('change',update);
+  return ()=>media.removeEventListener('change',update);
+ },[]);
  useFrame((state,dt)=>{
   if(!root.current)return;
   const now=state.clock.elapsedTime;
   progress.current+=Math.min(dt,.06);
   const t=progress.current;
+  const motion=reduced.current?0:1;
   const happy=action==='happy'||expression==='happy'||expression==='excited';
   const celebrate=action==='celebrate'||expression==='celebrate';
   const sleepy=action==='sleep'||expression==='sleepy';
@@ -88,10 +96,10 @@ function RobotMesh({src,palette,expression,action,onError,onLoaded}:{src:string;
   const thinking=action==='think'||expression==='thinking';
   const roll=action==='walk';
   const blink=action==='blink';
-  const targetY=celebrate?Math.abs(Math.sin(t*9))*.18:happy?Math.abs(Math.sin(t*6))*.07:Math.sin(now*1.3)*.035;
+  const targetY=motion*(celebrate?Math.abs(Math.sin(t*9))*.18:happy?Math.abs(Math.sin(t*6))*.07:Math.sin(now*1.3)*.035);
   root.current.position.y=MathUtils.damp(root.current.position.y,targetY,8,dt);
   root.current.rotation.z=MathUtils.damp(root.current.rotation.z,
-    oops?-.08:celebrate?Math.sin(t*9)*.08:0,8,dt);
+    motion*(oops?-.08:celebrate?Math.sin(t*9)*.08:0),8,dt);
   // Animate the original named joints and preserve each source quaternion:
   // the Sketchfab source has non-identity, axis-conversion transforms.
   const pose=(name:AiRobotGroupName,angle:number,axisDirection:'x'|'y'|'z'='x')=>{
@@ -102,7 +110,7 @@ function RobotMesh({src,palette,expression,action,onError,onLoaded}:{src:string;
     // This avoids applying arm swings around the Sketchfab FBX conversion axes.
     part.parent?.getWorldQuaternion(rotationDelta.current);
     axis.current.applyQuaternion(rotationDelta.current.invert()).normalize();
-    rotationDelta.current.setFromAxisAngle(axis.current,angle);
+    rotationDelta.current.setFromAxisAngle(axis.current,angle*motion);
     part.quaternion.slerp(rotationDelta.current.multiply(initial.clone()),Math.min(1,dt*12));
   };
   pose('Head',sleepy?-.18:thinking?.2:oops?-.15:celebrate?-.09:0,'z');
@@ -111,17 +119,17 @@ function RobotMesh({src,palette,expression,action,onError,onLoaded}:{src:string;
   pose('LeftWheel',roll?t*6:0,'x');
   pose('RightWheel',roll?t*6:0,'x');
   pose('Antenna',blink?.08*Math.sin(t*17):0,'z');
-  root.current.rotation.y=MathUtils.damp(root.current.rotation.y,roll?Math.sin(t*2)*.12:0,8,dt);
+  root.current.rotation.y=MathUtils.damp(root.current.rotation.y,motion*(roll?Math.sin(t*2)*.12:0),8,dt);
  });
  return object?<group ref={root}><primitive object={object}/></group>:null;
 }
 
-export function AiRobotCanvas({src,palette,expression,action,onLoaded,onError}:{src:string;palette:RobotPalette;expression:RobotExpression;action:MimoAction;onLoaded:()=>void;onError:(reason:string)=>void}) {
+export function AiRobotCanvas({src,palette,expression,action,serial=0,onLoaded,onError}:{src:string;palette:RobotPalette;expression:RobotExpression;action:MimoAction;serial?:number;onLoaded:()=>void;onError:(reason:string)=>void}) {
  return <Canvas dpr={[1,1.75]} camera={{position:[0,1,5.6],fov:42}} shadows gl={{alpha:true,antialias:true}}>
   <ambientLight intensity={.95}/>
   <hemisphereLight args={['#fff4fb','#9be9ff',1.15]}/>
   <directionalLight position={[-3,5,5]} intensity={2.2} color="#fff4dd" castShadow/>
   <pointLight position={[3,2,2]} intensity={9} color="#d4b4ff" distance={8}/>
-  <RobotMesh src={src} palette={palette} expression={expression} action={action} onLoaded={onLoaded} onError={onError}/>
+  <RobotMesh src={src} palette={palette} expression={expression} action={action} serial={serial} onLoaded={onLoaded} onError={onError}/>
  </Canvas>;
 }

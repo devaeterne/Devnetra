@@ -15,10 +15,10 @@
 | MSCT-06 | Real part pivots for Head/LeftArm/RightArm/LeftWheel/RightWheel | P0 | MSCT-02,03 | IN_PROGRESS | G2 |
 | MSCT-07 | Implement idle, wave, happy, celebrate with clear visible differences | P0 | MSCT-06 | IN_PROGRESS | G2 |
 | MSCT-08 | Think/oops/sleep/roll/blink and eight expression mapping | P1 | MSCT-05,07 | OPEN | G2 |
-| MSCT-09 | Action priorities, deterministic replay, cooldown, interrupt/reduced-motion | P0 | MSCT-07 | OPEN | G2 |
-| MSCT-10 | Reusable speech-bubble component, queue/replace, TTL and mobile placement | P1 | MSCT-03 | OPEN | G3 |
-| MSCT-11 | Localized child-friendly EN/TR bubble copy: Aferin, Harika, Süper, Try again, Think together | P1 | MSCT-10 | OPEN | G3 |
-| MSCT-12 | Typed game events connecting animations, bubble and idempotent feedback | P0 | MSCT-09,11 | OPEN | G3 |
+| MSCT-09 | Action priorities, deterministic replay, cooldown, interrupt/reduced-motion | P0 | MSCT-07 | IN_PROGRESS | G2 |
+| MSCT-10 | Reusable speech-bubble component, queue/replace, TTL and mobile placement | P1 | MSCT-03 | DONE | G3 |
+| MSCT-11 | Localized child-friendly EN/TR bubble copy: Aferin, Harika, Süper, Try again, Think together | P1 | MSCT-10 | DONE | G3 |
+| MSCT-12 | Typed game events connecting animations, bubble and idempotent feedback | P0 | MSCT-09,11 | IN_PROGRESS | G3 |
 | MSCT-13 | Parent-approved local preference persistence, age track UX and reset | P1 | MSCT-04,08 | OPEN | G3 |
 | MSCT-14 | Accessible 2D fallback, context loss, network/mesh error and reduced motion | P0 | MSCT-03,09 | OPEN | G1/G4 |
 | MSCT-15 | Actual-model browser, visual, keyboard, device, performance and regression suite | P0 | MSCT-04..14 | OPEN | G4 |
@@ -53,14 +53,14 @@
 - [x] Real-model head and both arm pivots use world-to-parent axis conversion and baseline source quaternions; visible waving/celebration confirmed in Chrome. Wheel rotation/long-duration drift checks remain OPEN.
 - [ ] Core actions: actual-model idle/wave/celebrate preview implemented, but return-to-idle/interrupt controller integration and human motion signoff remain.
 - [ ] Secondary: thinking / surprised / sleepy / cool / oops / roll / blink/excited with actual part/eye behavior as technically possible.
-- [ ] Preserve shared action priorities; avoid repeating engine per page.
+- [x] Reuse shared action priorities and idle timeout; game-event preview verified on real bundled GLB in Chrome.
 - [ ] Verify reduced-motion, speed cap, interrupted actions, event replay and context loss; no endless drift.
 
 ### MSCT-10/11/12 — Speech & reactions · OPEN
-- [ ] Anchored bubble overlay with queue policy, bounded text, automatic timeout, screen reader announcements and low-motion mode.
-- [ ] EN/TR text parity, no PII/chat, parent-friendly tone; copy examples: “Aferin!”, “Harika!”, “Süper!”, “Bir daha deneyelim!”, “Beraber düşünelim.”
-- [ ] Typed `game.start`, `answer.correct`, `answer.wrong`, `hint.request`, `challenge.complete` mappings; no double-triggered XP.
-- [ ] Optional manual demo buttons in **development-only** Playground; not on public Kids UI until verified.
+- [x] Anchored replacement-based bubble, automatic 3.2s timeout, screen reader announcement and reduced-motion styling; mobile human QA pending.
+- [x] EN/TR copy parity in typed model for six events. Human wording review remains.
+- [x] Typed preview event mappings drive both action and bubble, and rejected low-priority events do not replace them. Actual XP/scoring integration is not yet connected.
+- [x] Manual reaction buttons in development-only Character Studio; public Kids homepage untouched.
 
 ### MSCT-13/14/15/16/17/18 — Integrate & release · OPEN/BLOCKED
 - [ ] Persist allowed preferences locally with schema validation; parent-controlled nickname only.
@@ -76,7 +76,9 @@
 | Existing editor (not MSCT-03 certification) | Implemented baseline | Prior `pnpm ci:local`; AI Robot editor smoke ran against Mimo GLB fixture |
 | Audit MSCT-02 | DONE, not VERIFIED | Static audit of supplied GLB: 25 meshes, 38 nodes, 18 materials, source hash recorded; see REAL_MODEL_AUDIT.md |
 | Evidence MSCT-04 | DONE, not VERIFIED | Actual AI Robot GLB tested with five palette screenshots; shell/trim change without model reload. Human visual approval pending. |
-| MSCT-06/07 | IN_PROGRESS | Actual AI Robot head/arm actions captured; reduced motion, event priority and wheel QA not yet certified. |
+| MSCT-06/07 | IN_PROGRESS | Actual model head/arm actions captured; reduced motion and wheel QA remain. |
+| MSCT-09/12 | IN_PROGRESS | Real Chrome priority, expiry and event-to-bubble previews passed; game-scoring integration remains open. |
+| MSCT-10/11 | DONE, not VERIFIED | Real Chrome EN/TR bubble copy, expiry, replacement and aria status PASS; mobile/human signoff pending. |
 | MSCT-01, 03–18 | Not verified | No actual AI Robot per-part browser certification or release approval yet |
 
 ## Progress log
@@ -90,3 +92,5 @@
 - **2026-11-06 — Real-model Chrome QA:** located authorized local GLB at `/Users/devaeterne/Desktop/airobot/ai_robot.glb`, corrected scene framing and arm pivot quaternion multiplication, added immediate non-reloading palette changes. Ran `AI_ROBOT_GLB_FILE=/Users/devaeterne/Desktop/airobot/ai_robot.glb pnpm test:ai-robot-real`: PASS (actual GLB hash, five palette screenshots, distinct wave/celebrate, no page errors). Screenshots ignored under `reports/visual/`. Rights evidence and visual release signoff still outstanding.
 
 - **2026-11-07 — Bundled model:** User explicitly requested that previously uploaded AI Robot GLB be committed to public GitHub. Copied exact, SHA-verified asset to Kids public assets and auto-wired `kids.robot.ai-robot` in registry and Character Studio. Public delivery now implemented, but written extra-rights documentation and full release certification remain outstanding (MSCT-01/16).
+
+- **2026-11-07 — Mascot event feedback v1:** real bundled GLB uses shared action priorities and idle recovery. Added typed EN/TR encouragement copy and accessible short-lived bubble with six developer-only game-event controls. Local Chrome test PASS for Aferin!, Harika!, English switch, priority rejection, expiry, idle return. MSCT-10/11 DONE; MSCT-09/12 IN_PROGRESS until real game integration.

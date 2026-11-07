@@ -1,8 +1,10 @@
 'use client';
 import dynamic from 'next/dynamic';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { assetRegistry } from '@devnetra/assets';
-import { type RobotPalette,type RobotExpression,robotPalettes,robotExpressions,defaultRobotPreferences,mimoActions,type MimoAction } from '@devnetra/characters';
+import {type RobotPalette,type RobotExpression,robotPalettes,robotExpressions,defaultRobotPreferences,mimoActions,type MimoEvent,feedbackForEvent, type MascotLocale} from '@devnetra/characters';
+import {useMimoAnimation} from './use-mimo-animation';
+import {MascotBubble, type MascotBubbleMessage} from './mascot-bubble';
 
 const modelId='f7c4e4dcd1594e3e92b2d35a4ec8a93a';
 const AiRobotCanvas=dynamic(()=>import('./ai-robot-canvas').then(mod=>mod.AiRobotCanvas),{ssr:false});
@@ -12,7 +14,25 @@ const expressionLabels:Record<RobotExpression,string>={happy:'Happy',thinking:'T
 export function AiRobotPreview() {
   const [palette,setPalette]=useState<RobotPalette>(defaultRobotPreferences.palette);
   const [expression,setExpression]=useState<RobotExpression>(defaultRobotPreferences.expression);
-  const [action,setAction]=useState<MimoAction>('idle');
+  const animation=useMimoAnimation();
+  const [locale,setLocale]=useState<MascotLocale>('tr');
+  const [bubble,setBubble]=useState<MascotBubbleMessage|null>(null);
+  const expireBubble=useCallback((id:number)=>setBubble(current=>current?.id===id?null:current),[]);
+  const bubbleSeq=useRef(0);
+  const events:ReadonlyArray<{event:MimoEvent;tr:string;en:string}>=[
+    {event:'game.start',tr:'Oyuna başla',en:'Start game'},
+    {event:'answer.correct',tr:'Doğru cevap',en:'Correct answer'},
+    {event:'answer.wrong',tr:'Tekrar dene',en:'Try again'},
+    {event:'challenge.complete',tr:'Görev tamamlandı',en:'Challenge complete'},
+    {event:'hint.request',tr:'İpucu iste',en:'Request hint'},
+    {event:'break.start',tr:'Mola',en:'Break'},
+  ];
+  function trigger(event:MimoEvent){
+    const feedback=feedbackForEvent(event);
+    const accepted=animation.react(event);
+    // Keep speech and movement in sync when the priority engine rejects a weaker event.
+    if(accepted)setBubble({id:++bubbleSeq.current,key:feedback.key,durationMs:feedback.durationMs});
+  }
   const [localUrl,setLocalUrl]=useState('');
   const [loaded,setLoaded]=useState(false);
   const [error,setError]=useState('');
@@ -32,7 +52,9 @@ export function AiRobotPreview() {
   return <section className="dv-ai-robot-preview" aria-label="AI Robot character editor">
     <header><h2>AI Robot — Character editor</h2><p>Source: AI Robot by Noores on Sketchfab. Model is bundled for preview, and colors/actions work directly without uploading a file.</p></header>
     <div className="dv-ai-robot-preview__frame" data-robot-mode={src?'editable':'external'}>
-      {src?<div className="dv-ai-robot-preview__canvas"><AiRobotCanvas src={src} palette={palette} expression={expression} action={action} onLoaded={()=>{setLoaded(true);setError('')}} onError={reason=>{setError(reason);setLoaded(false)}}/><span role="status" className="dv-ai-robot-preview__status">{loaded?'3D model loaded':error||'Loading 3D model…'}</span></div>:
+      {src?<div className="dv-ai-robot-preview__canvas"><AiRobotCanvas src={src} palette={palette} expression={expression} action={animation.action} serial={animation.serial} onLoaded={()=>{setLoaded(true);setError('')}} onError={reason=>{setError(reason);setLoaded(false)}}/><span role="status" className="dv-ai-robot-preview__status">{loaded?'3D model loaded':error||'Loading 3D model…'}</span>
+        <MascotBubble message={bubble} locale={locale} onExpire={expireBubble}/>
+      </div>:
       <iframe title="AI Robot by Noores on Sketchfab" src={'https://sketchfab.com/models/'+modelId+'/embed?autostart=0&ui_theme=dark'} allow="autoplay; fullscreen; xr-spatial-tracking" allowFullScreen loading="lazy" referrerPolicy="strict-origin-when-cross-origin"/>}
     </div>
     <a href={'https://sketchfab.com/3d-models/ai-robot-'+modelId} target="_blank" rel="noopener noreferrer">Open original model on Sketchfab</a>
@@ -52,9 +74,18 @@ export function AiRobotPreview() {
     </label>
     <h3>Motion preview</h3>
     <div className="dv-ai-robot-preview__colors" role="group" aria-label="Robot animation actions">
-     {mimoActions.map(v=><button type="button" key={v} aria-pressed={action===v} onClick={()=>setAction(v)}>{v}</button>)}
+     {mimoActions.map(v=><button type="button" key={v} aria-pressed={animation.action===v} onClick={()=>animation.play(v,true)}>{v}</button>)}
     </div>
-    <output className="dv-ai-robot-preview__output">Selected: {palette} · {expression} · {action}</output>
+    <h3>Game reactions & speech bubbles</h3>
+    <label className="dv-ai-robot-preview__label">Message language
+      <select aria-label="Message language" value={locale} onChange={e=>setLocale(e.target.value as MascotLocale)}>
+        <option value="tr">Türkçe</option><option value="en">English</option>
+      </select>
+    </label>
+    <div className="dv-ai-robot-preview__colors" role="group" aria-label="Game reaction events">
+      {events.map(({event,tr,en})=><button type="button" key={event} onClick={()=>trigger(event)}>{locale==='tr'?tr:en}</button>)}
+    </div>
+    <output className="dv-ai-robot-preview__output">Selected: {palette} · {expression} · {animation.action}</output>
     <p>Expressions currently affect the robot's procedural pose, not its eye textures or facial geometry. Full facial editing requires inspecting the actual model mesh.</p>
   </section>;
 }
