@@ -59,7 +59,7 @@
 ### MSCT-10/11/12 — Speech & reactions · OPEN
 - [x] Anchored replacement-based bubble, automatic 3.2s timeout, screen reader announcement and reduced-motion styling; mobile human QA pending.
 - [x] EN/TR copy parity in typed model for six events. Human wording review remains.
-- [x] Typed preview event mappings drive both action and bubble, and rejected low-priority events do not replace them. Actual XP/scoring integration is not yet connected.
+- [x] Typed preview event mappings drive both action and bubble, and rejected low-priority events do not replace them. A new shared pure event-ID deduplication reducer is prepared on a review branch; local CI and actual game scoring integration are not yet verified.
 - [x] Manual reaction buttons in development-only Character Studio; public Kids homepage untouched.
 
 ### MSCT-13/14/15/16/17/18 — Integrate & release · OPEN/BLOCKED
@@ -102,3 +102,5 @@
 - **2026-11-07 — MSCT-08 face atlas:** implemented procedural CanvasTexture for the original Head_Eyes_0 UV atlas without deforming the face screen. Happy, sleepy, surprised and blink checked with real-model Chrome screenshots. Texture is instance-local, disposed on unmount; unchanged licensed GLB. Human UX and eight-expression signoff pending.
 
 - **2026-11-07 — MSCT-06/07 motion improvements:** replaced ad hoc joint animation values with pure typed aiRobotMotionPose in packages/characters. Walk now shows bounded synchronized wheel rotation, modest body rock and arm counter-swing while anchored to the studio. Happy has balanced arm lift and bounce; celebrate has stronger two-arm lift. Reduced motion produces zero physical displacement. Real GLB Chrome screenshots for idle, roll, happy, celebrate inspected; browser motion regression and pure deterministic tests added. Long-duration device QA still pending.
+
+- **2026-11-07 — MSCT-12 preparation (review branch):** Created a typed, bounded, ephemeral mascot game-event reducer. It rejects duplicate logical event IDs, retains high-priority reactions, returns expired animations to idle, and deliberately never changes XP or child profiles. Unit tests were authored, but local `pnpm ci:local` and browser tests were **NOT RUN** because the authorized Mac is offline. Do not mark DONE/VERIFIED or merge to main before local checks and integration with actual game logic.
