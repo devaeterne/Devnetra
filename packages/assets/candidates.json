@@ -8,13 +8,15 @@
       "sourceUid": "f7c4e4dcd1594e3e92b2d35a4ec8a93a",
       "sourceUrl": "https://sketchfab.com/3d-models/ai-robot-f7c4e4dcd1594e3e92b2d35a4ec8a93a",
       "license": "Sketchfab Free Standard",
-      "permission": "user-reported-approved",
+      "permission": "user-attested-publishing-approval",
       "downloadable": true,
       "rigged": false,
       "animations": 0,
-      "status": "local-editor-ready",
-      "bundledPath": null,
-      "licenseEvidence": "not-yet-attached"
+      "status": "bundled",
+      "bundledPath": "/assets/characters/ai-robot.glb",
+      "licenseEvidence": "not-yet-attached",
+      "sha256": "e6cff59131f0100016f7b08079dd3170968bebb728666d7d26615d31401018cd",
+      "sizeBytes": 675992
     }
   ]
 }

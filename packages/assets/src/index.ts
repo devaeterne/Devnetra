@@ -1,4 +1,4 @@
-export type AssetLicense = 'CC0' | 'ISC' | 'MIT' | 'original';
+export type AssetLicense = 'CC0' | 'ISC' | 'MIT' | 'original' | 'Sketchfab-Standard';
 export type AssetStatus = 'available' | 'planned';
 export interface AssetEntry {
   readonly id: string;
@@ -18,6 +18,13 @@ export const assetRegistry = {
     sourceUrl: 'https://devnetra.dev',
     license: 'CC0', format: 'glb', version: '1.1.0',
     status: 'available', bundledPath: '/assets/characters/devnetra-mimo.glb', fallback: 'kids.robot.fallback',
+  },
+  'kids.robot.ai-robot': {
+    id: 'kids.robot.ai-robot',
+    source: 'AI Robot by Noores — Sketchfab model',
+    sourceUrl: 'https://sketchfab.com/3d-models/ai-robot-f7c4e4dcd1594e3e92b2d35a4ec8a93a',
+    license: 'Sketchfab-Standard', format: 'glb', version: '1.0.0',
+    status: 'available', bundledPath: '/assets/characters/ai-robot.glb', fallback: 'kids.robot.fallback',
   },
   'kids.robot.fallback': {
     id: 'kids.robot.fallback',

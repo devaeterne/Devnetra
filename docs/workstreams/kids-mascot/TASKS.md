@@ -9,7 +9,7 @@
 |---|---|---|---|---|---|
 | MSCT-01 | Verify model rights, author and public redistribution permission | P0 | — | BLOCKED | G0 |
 | MSCT-02 | Real AI Robot GLB audit: hierarchy, mesh/material mapping, textures, scale, hashes | P0 | — | DONE | G0 |
-| MSCT-03 | Versioned AI Robot adapter, typed part selectors and asset registry | P0 | MSCT-01,02 | IN_PROGRESS | G0/G1 |
+| MSCT-03 | Versioned AI Robot adapter, typed part selectors and asset registry | P0 | MSCT-01,02 | DONE | G0/G1 |
 | MSCT-04 | Five true independent material palettes (Ocean/Violet/Candy/Lime/Sunshine) | P0 | MSCT-02,03 | DONE | G1 |
 | MSCT-05 | Glowing eye/antenna, expressive look and bounded studio lighting | P0 | MSCT-02,03 | OPEN | G1 |
 | MSCT-06 | Real part pivots for Head/LeftArm/RightArm/LeftWheel/RightWheel | P0 | MSCT-02,03 | IN_PROGRESS | G2 |
@@ -22,7 +22,7 @@
 | MSCT-13 | Parent-approved local preference persistence, age track UX and reset | P1 | MSCT-04,08 | OPEN | G3 |
 | MSCT-14 | Accessible 2D fallback, context loss, network/mesh error and reduced motion | P0 | MSCT-03,09 | OPEN | G1/G4 |
 | MSCT-15 | Actual-model browser, visual, keyboard, device, performance and regression suite | P0 | MSCT-04..14 | OPEN | G4 |
-| MSCT-16 | Public delivery + credit/attribution + Vercel Blob/CDN URL (rights-gated) | P0 | MSCT-01,15 | BLOCKED | G4 |
+| MSCT-16 | Public delivery + credit/attribution + Vercel Blob/CDN URL (rights-gated) | P0 | MSCT-01,15 | IN_PROGRESS | G4 |
 | MSCT-17 | Make licensed AI Robot the primary Kids homepage mascot, retain Mimo fallback | P0 | MSCT-01,15,16 | OPEN | G4 |
 | MSCT-18 | Native/mobile mascot support (separate acceptance plan) | P2 | MSCT-14 | OPEN | G4 |
 
@@ -88,3 +88,5 @@
 - **2026-11-06 — MSCT-03 started:** defined source-specific material roles and node-group contract. Editor now targets original Head/LeftArm/RightArm/LeftWheel/RightWheel groups, keeps baseline joint quaternions and preserves eye PNG and wheel/hand materials. Real-model browser verification and public asset delivery remain OPEN.
 
 - **2026-11-06 — Real-model Chrome QA:** located authorized local GLB at `/Users/devaeterne/Desktop/airobot/ai_robot.glb`, corrected scene framing and arm pivot quaternion multiplication, added immediate non-reloading palette changes. Ran `AI_ROBOT_GLB_FILE=/Users/devaeterne/Desktop/airobot/ai_robot.glb pnpm test:ai-robot-real`: PASS (actual GLB hash, five palette screenshots, distinct wave/celebrate, no page errors). Screenshots ignored under `reports/visual/`. Rights evidence and visual release signoff still outstanding.
+
+- **2026-11-07 — Bundled model:** User explicitly requested that previously uploaded AI Robot GLB be committed to public GitHub. Copied exact, SHA-verified asset to Kids public assets and auto-wired `kids.robot.ai-robot` in registry and Character Studio. Public delivery now implemented, but written extra-rights documentation and full release certification remain outstanding (MSCT-01/16).

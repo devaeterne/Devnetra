@@ -25,3 +25,22 @@ assert.ok(fs.existsSync(path.join(root,'scripts/build-kids-mascot.py')),'generat
 assert.ok(fs.existsSync(path.join(root,'docs/assets/mimo-cc0.md')),'license provenance missing');
 assert.ok(!fs.existsSync(path.join(root,'.github/workflows')),'no GitHub-hosted CI');
 console.log('MASCOT-GLB-PASS',data.byteLength,'bytes',gltf.meshes.length,'meshes',mascot.sha256);
+
+const ai=manifest.assets.find(x=>x.id==='kids.robot.ai-robot');
+assert.ok(ai,'AI Robot missing from asset manifest');
+assert.equal(ai.status,'available');
+assert.match(ai.license,/Sketchfab Standard/);
+assert.notEqual(ai.license,'CC0-1.0','Third-party model must never be labeled CC0');
+const aiData=fs.readFileSync(path.join(root,ai.path));
+assert.equal(aiData.toString('ascii',0,4),'glTF');
+assert.equal(aiData.readUInt32LE(8),aiData.length);
+assert.equal(aiData.length,ai.sizeBytes);
+assert.equal(crypto.createHash('sha256').update(aiData).digest('hex'),ai.sha256);
+assert.equal(ai.sha256,'e6cff59131f0100016f7b08079dd3170968bebb728666d7d26615d31401018cd');
+assert.ok(aiData.length<1024*1024,'AI Robot must remain under 1MB');
+const aiJsonLen=aiData.readUInt32LE(12);
+const aiGltf=JSON.parse(aiData.subarray(20,20+aiJsonLen).toString('utf8'));
+assert.equal(aiGltf.meshes.length,25);
+assert.equal(aiGltf.nodes.length,38);
+assert.equal(aiGltf.animations?.length??0,0);
+console.log('AI_ROBOT_BUNDLED_GLB_PASS',aiData.length,ai.sha256);

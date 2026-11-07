@@ -1,6 +1,7 @@
 'use client';
 import dynamic from 'next/dynamic';
 import { useEffect, useRef, useState } from 'react';
+import { assetRegistry } from '@devnetra/assets';
 import { type RobotPalette,type RobotExpression,robotPalettes,robotExpressions,defaultRobotPreferences,mimoActions,type MimoAction } from '@devnetra/characters';
 
 const modelId='f7c4e4dcd1594e3e92b2d35a4ec8a93a';
@@ -16,7 +17,7 @@ export function AiRobotPreview() {
   const [loaded,setLoaded]=useState(false);
   const [error,setError]=useState('');
   const previous=useRef<string|null>(null);
-  const src=localUrl||allowedUrl;
+  const src=localUrl||allowedUrl||assetRegistry['kids.robot.ai-robot'].bundledPath||'';
 
   useEffect(()=>()=>{if(previous.current)URL.revokeObjectURL(previous.current)},[]);
   function choose(file:File|undefined){
@@ -29,16 +30,16 @@ export function AiRobotPreview() {
     setLoaded(false);setError('');setLocalUrl(url);
   }
   return <section className="dv-ai-robot-preview" aria-label="AI Robot character editor">
-    <header><h2>AI Robot — Character editor</h2><p>Source: Noores on Sketchfab. You reported that usage permission is complete; the model file must still be supplied to enable editing.</p></header>
+    <header><h2>AI Robot — Character editor</h2><p>Source: AI Robot by Noores on Sketchfab. Model is bundled for preview, and colors/actions work directly without uploading a file.</p></header>
     <div className="dv-ai-robot-preview__frame" data-robot-mode={src?'editable':'external'}>
       {src?<div className="dv-ai-robot-preview__canvas"><AiRobotCanvas src={src} palette={palette} expression={expression} action={action} onLoaded={()=>{setLoaded(true);setError('')}} onError={reason=>{setError(reason);setLoaded(false)}}/><span role="status" className="dv-ai-robot-preview__status">{loaded?'3D model loaded':error||'Loading 3D model…'}</span></div>:
       <iframe title="AI Robot by Noores on Sketchfab" src={'https://sketchfab.com/models/'+modelId+'/embed?autostart=0&ui_theme=dark'} allow="autoplay; fullscreen; xr-spatial-tracking" allowFullScreen loading="lazy" referrerPolicy="strict-origin-when-cross-origin"/>}
     </div>
     <a href={'https://sketchfab.com/3d-models/ai-robot-'+modelId} target="_blank" rel="noopener noreferrer">Open original model on Sketchfab</a>
-    <label className="dv-ai-robot-preview__label">Choose the authorized model file (.glb, up to 30 MB)
+    <label className="dv-ai-robot-preview__label">Optional: preview another authorized .glb file (up to 30 MB)
       <input aria-label="Choose AI Robot GLB" type="file" accept=".glb,model/gltf-binary" onChange={event=>choose(event.target.files?.[0])}/>
     </label>
-    <p>File selection is local to this browser session. Nothing is uploaded to Devnetra or GitHub. A configured public HTTPS model URL can be used later.</p>
+    <p>The bundled AI Robot loads automatically. An optional custom file remains local to your browser session. No file upload is required.</p>
     {error&&<p role="alert">{error}</p>}
     <h3>Robot colors</h3>
     <div className="dv-ai-robot-preview__colors" role="group" aria-label="Robot color palette">
@@ -53,7 +54,7 @@ export function AiRobotPreview() {
     <div className="dv-ai-robot-preview__colors" role="group" aria-label="Robot animation actions">
      {mimoActions.map(v=><button type="button" key={v} aria-pressed={action===v} onClick={()=>setAction(v)}>{v}</button>)}
     </div>
-    <output className="dv-ai-robot-preview__output">Selected: {palette} · {expression} · {action}{!src?' (upload a GLB to preview changes)':''}</output>
+    <output className="dv-ai-robot-preview__output">Selected: {palette} · {expression} · {action}</output>
     <p>Expressions currently affect the robot's procedural pose, not its eye textures or facial geometry. Full facial editing requires inspecting the actual model mesh.</p>
   </section>;
 }
