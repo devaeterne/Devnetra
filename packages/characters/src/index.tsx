@@ -1,3 +1,4 @@
+export * from './ai-robot-mood.js';
 export * from './feedback.js';
 export * from './ai-robot-contract.js';
 export * from './personalization.js';

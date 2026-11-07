@@ -26,6 +26,19 @@ try{
  await events.getByRole('button',{name:'Correct answer'}).click();
  assert.equal(await page.locator('.dv-mascot-bubble').innerText(),'Well done!');
  await page.screenshot({path:'reports/visual/ai-robot-feedback.png',fullPage:true});
+ // Eye and antenna mood lighting is driven by the original GLB materials.
+ await page.getByRole('group',{name:'Robot animation actions'}).getByRole('button',{name:'idle'}).click();
+ const expression=page.getByLabel('Expression preset');
+ await expression.selectOption('happy');
+ await page.waitForTimeout(450);
+ const bright=await page.locator('.dv-ai-robot-preview__frame').screenshot({path:'reports/visual/ai-robot-mood-happy.png'});
+ await expression.selectOption('sleepy');
+ await page.waitForTimeout(450);
+ const dim=await page.locator('.dv-ai-robot-preview__frame').screenshot({path:'reports/visual/ai-robot-mood-sleepy.png'});
+ assert.equal(bright.equals(dim),false,'Sleepy eyes and antenna should differ visibly from happy mood');
+ await expression.selectOption('thinking');
+ await page.waitForTimeout(380);
+ await page.locator('.dv-ai-robot-preview__frame').screenshot({path:'reports/visual/ai-robot-mood-thinking.png'});
  assert.deepEqual(errors,[]);
- console.log('AI_ROBOT_FEEDBACK_BROWSER_PASS: actual bundled GLB, TR/EN messages, priority, expiry/idle, screen reader status');
+ console.log('AI_ROBOT_FEEDBACK_BROWSER_PASS: bundled GLB, TR/EN messages, priority, expiry/idle, happy/sleepy/thinking eye and antenna feedback');
 }finally{await browser.close()}

@@ -11,10 +11,10 @@
 | MSCT-02 | Real AI Robot GLB audit: hierarchy, mesh/material mapping, textures, scale, hashes | P0 | — | DONE | G0 |
 | MSCT-03 | Versioned AI Robot adapter, typed part selectors and asset registry | P0 | MSCT-01,02 | DONE | G0/G1 |
 | MSCT-04 | Five true independent material palettes (Ocean/Violet/Candy/Lime/Sunshine) | P0 | MSCT-02,03 | DONE | G1 |
-| MSCT-05 | Glowing eye/antenna, expressive look and bounded studio lighting | P0 | MSCT-02,03 | OPEN | G1 |
+| MSCT-05 | Glowing eye/antenna, expressive look and bounded studio lighting | P0 | MSCT-02,03 | IN_PROGRESS | G1 |
 | MSCT-06 | Real part pivots for Head/LeftArm/RightArm/LeftWheel/RightWheel | P0 | MSCT-02,03 | IN_PROGRESS | G2 |
 | MSCT-07 | Implement idle, wave, happy, celebrate with clear visible differences | P0 | MSCT-06 | IN_PROGRESS | G2 |
-| MSCT-08 | Think/oops/sleep/roll/blink and eight expression mapping | P1 | MSCT-05,07 | OPEN | G2 |
+| MSCT-08 | Think/oops/sleep/roll/blink and eight expression mapping | P1 | MSCT-05,07 | IN_PROGRESS | G2 |
 | MSCT-09 | Action priorities, deterministic replay, cooldown, interrupt/reduced-motion | P0 | MSCT-07 | IN_PROGRESS | G2 |
 | MSCT-10 | Reusable speech-bubble component, queue/replace, TTL and mobile placement | P1 | MSCT-03 | DONE | G3 |
 | MSCT-11 | Localized child-friendly EN/TR bubble copy: Aferin, Harika, Süper, Try again, Think together | P1 | MSCT-10 | DONE | G3 |
@@ -45,14 +45,14 @@
 ### MSCT-03/04/05 — Foundation · OPEN
 - [ ] Shared `AiRobotRigAdapter` with predictable part lookup, missing-node diagnostics, reset/dispose and safe source binding.
 - [x] Atomic per-instance palette changes with no GLB reload; preserve eye texture and mechanical contrast. All five colors captured on real AI Robot model (awaiting approval to mark VERIFIED).
-- [ ] Separately controllable eye glow, antenna light, shell, accent and wheels.
+- [x] Eye texture emissive and antenna emissive controlled independently, with source PNG preserved and typed mood intensity bounds; wheel materials preserved. Human visual quality review remains.
 - [ ] Bounded illumination suitable for Kids light backgrounds; screenshot all five themes.
 - [ ] New Kids component uses existing asset registry, fallback and role/label semantics.
 
 ### MSCT-06/07/08/09 — Motion & personality · OPEN
 - [x] Real-model head and both arm pivots use world-to-parent axis conversion and baseline source quaternions; visible waving/celebration confirmed in Chrome. Wheel rotation/long-duration drift checks remain OPEN.
 - [ ] Core actions: actual-model idle/wave/celebrate preview implemented, but return-to-idle/interrupt controller integration and human motion signoff remain.
-- [ ] Secondary: thinking / surprised / sleepy / cool / oops / roll / blink/excited with actual part/eye behavior as technically possible.
+- [ ] Secondary: thinking/sleepy/oops/cool now drive typed eye and antenna brightness; head/arm reactions exist. Source Eyes mesh includes the face screen; eye-only blink requires a separate overlay/mask (do not scale the whole face). Wheel and expression QA remain open.
 - [x] Reuse shared action priorities and idle timeout; game-event preview verified on real bundled GLB in Chrome.
 - [ ] Verify reduced-motion, speed cap, interrupted actions, event replay and context loss; no endless drift.
 
@@ -94,3 +94,6 @@
 - **2026-11-07 — Bundled model:** User explicitly requested that previously uploaded AI Robot GLB be committed to public GitHub. Copied exact, SHA-verified asset to Kids public assets and auto-wired `kids.robot.ai-robot` in registry and Character Studio. Public delivery now implemented, but written extra-rights documentation and full release certification remain outstanding (MSCT-01/16).
 
 - **2026-11-07 — Mascot event feedback v1:** real bundled GLB uses shared action priorities and idle recovery. Added typed EN/TR encouragement copy and accessible short-lived bubble with six developer-only game-event controls. Local Chrome test PASS for Aferin!, Harika!, English switch, priority rejection, expiry, idle return. MSCT-10/11 DONE; MSCT-09/12 IN_PROGRESS until real game integration.
+
+- **2026-11-07 — Emotional lighting:** added typed mood mapping and bounded light intensity; original textured Eyes and emissive antenna now react separately to action/expression, preserving source texture. Removed constant idle bouncing in happy preset. Browser and unit tests added; human visual approval remains open.
+\n- **2026-11-07 — Visual QA finding:** scaling Head_Eyes_0 collapses the black face panel because its source mesh includes the whole screen. Rejected that experiment. Kept original face geometry and tested mood-sensitive eye/antenna light; real independent blink remains OPEN (MSCT-08).\n

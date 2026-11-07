@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { Box3, Group, MathUtils, Mesh, MeshStandardMaterial, Object3D, Quaternion, Vector3 } from 'three';
-import { robotPalettes, materialRole, aiRobotGroups, type AiRobotGroupName, type RobotPalette, type RobotExpression, type MimoAction } from '@devnetra/characters';
+import { robotPalettes, materialRole, aiRobotGroups, aiRobotMoodFor, aiRobotMoodLight, type AiRobotGroupName, type RobotPalette, type RobotExpression, type MimoAction } from '@devnetra/characters';
 
 function RobotMesh({src,palette,expression,action,serial,onError,onLoaded}:{src:string;palette:RobotPalette;expression:RobotExpression;action:MimoAction;serial:number;onError:(reason:string)=>void;onLoaded:()=>void}) {
  const [object,setObject]=useState<Group|null>(null);
@@ -15,6 +15,9 @@ function RobotMesh({src,palette,expression,action,serial,onError,onLoaded}:{src:
  const sourceRotations=useRef<Partial<Record<AiRobotGroupName,Quaternion>>>({});
  const rotationDelta=useRef(new Quaternion());
  const axis=useRef(new Vector3(1,0,0));
+ const eyes=useRef<MeshStandardMaterial[]>([]);
+ const antennaLights=useRef<MeshStandardMaterial[]>([]);
+
 
  useEffect(()=>{
   let active=true;
@@ -31,6 +34,9 @@ function RobotMesh({src,palette,expression,action,serial,onError,onLoaded}:{src:
    model.position.copy(center).multiplyScalar(-scale);
    nodes.current={};
    sourceRotations.current={};
+   eyes.current=[];
+   antennaLights.current=[];
+
    for(const name of aiRobotGroups) {
      const part=model.getObjectByName(name);
      if(!part)continue;
@@ -49,6 +55,13 @@ function RobotMesh({src,palette,expression,action,serial,onError,onLoaded}:{src:
      const clone=(m:MeshStandardMaterial)=>m instanceof MeshStandardMaterial?m.clone():m;
      if(Array.isArray(child.material))child.material=child.material.map(m=>m instanceof MeshStandardMaterial?clone(m):m);
      else if(child.material instanceof MeshStandardMaterial)child.material=clone(child.material);
+     const parts=Array.isArray(child.material)?child.material:[child.material];
+     for(const material of parts){
+       if(!(material instanceof MeshStandardMaterial))continue;
+       const role=materialRole(material.name);
+       if(role==='eyes')eyes.current.push(material);
+       else if(role==='glow')antennaLights.current.push(material);
+     }
    });
    setObject(model);
    onLoaded();
@@ -66,7 +79,7 @@ function RobotMesh({src,palette,expression,action,serial,onError,onLoaded}:{src:
        const role=materialRole(m.name);
        if(role==='shell'){m.color.set(colors.shell);m.roughness=.4;m.metalness=.14;}
        else if(role==='accent'){m.color.set(colors.trim);m.roughness=.33;}
-       else if(role==='glow'){m.color.set(colors.light);m.emissive.set(colors.light);m.emissiveIntensity=.72;}
+       else if(role==='glow'){m.color.set(colors.light);m.emissive.set(colors.light);}
        // Eyes, hands, joints and tires keep source colors and textures.
        m.needsUpdate=true;
      };
@@ -88,12 +101,20 @@ function RobotMesh({src,palette,expression,action,serial,onError,onLoaded}:{src:
   progress.current+=Math.min(dt,.06);
   const t=progress.current;
   const motion=reduced.current?0:1;
-  const happy=action==='happy'||expression==='happy'||expression==='excited';
-  const celebrate=action==='celebrate'||expression==='celebrate';
-  const sleepy=action==='sleep'||expression==='sleepy';
-  const oops=action==='oops'||expression==='oops'||expression==='surprised';
+  const mood=aiRobotMoodLight[aiRobotMoodFor(action,expression)];
+  const pulse=1+(reduced.current?0:Math.sin(now*(action==='celebrate'?9:3.5))*mood.pulse);
+  // The original Eyes material has an emissive PNG texture. Modify intensity
+  // only to preserve the pupil artwork; clone prevents global asset mutation.
+  const eyeTarget=mood.eye*pulse;
+  const antennaTarget=mood.antenna*pulse;
+  for(const mat of eyes.current)mat.emissiveIntensity=MathUtils.damp(mat.emissiveIntensity,eyeTarget,9,dt);
+  for(const mat of antennaLights.current)mat.emissiveIntensity=MathUtils.damp(mat.emissiveIntensity,antennaTarget,9,dt);
+  const happy=action==='happy'||(action==='idle'&&expression==='excited');
+  const celebrate=action==='celebrate';
+  const sleepy=action==='sleep'||(action==='idle'&&expression==='sleepy');
+  const oops=action==='oops'||(action==='idle'&&expression==='oops');
   const waving=action==='wave';
-  const thinking=action==='think'||expression==='thinking';
+  const thinking=action==='think'||(action==='idle'&&expression==='thinking');
   const roll=action==='walk';
   const blink=action==='blink';
   const targetY=motion*(celebrate?Math.abs(Math.sin(t*9))*.18:happy?Math.abs(Math.sin(t*6))*.07:Math.sin(now*1.3)*.035);
