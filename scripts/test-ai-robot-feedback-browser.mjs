@@ -49,6 +49,26 @@ try{
  await expression.selectOption('thinking');
  await page.waitForTimeout(380);
  await page.locator('.dv-ai-robot-preview__frame').screenshot({path:'reports/visual/ai-robot-mood-thinking.png'});
+ // Real-model body-language regression: wheels, bounce, celebration are distinct.
+ const motion=page.getByRole('group',{name:'Robot animation actions'});
+ await motion.getByRole('button',{name:'idle',exact:true}).click();
+ await page.waitForTimeout(320);
+ const motionIdle=await page.locator('.dv-ai-robot-preview__frame').screenshot({path:'reports/visual/ai-robot-motion-idle.png'});
+ await motion.getByRole('button',{name:'walk',exact:true}).click();
+ await page.waitForTimeout(380);
+ const motionRoll=await page.locator('.dv-ai-robot-preview__frame').screenshot({path:'reports/visual/ai-robot-motion-roll.png'});
+ await motion.getByRole('button',{name:'happy',exact:true}).click();
+ await page.waitForTimeout(410);
+ const motionHappy=await page.locator('.dv-ai-robot-preview__frame').screenshot({path:'reports/visual/ai-robot-motion-happy.png'});
+ await motion.getByRole('button',{name:'celebrate',exact:true}).click();
+ await page.waitForTimeout(480);
+ const motionCelebrate=await page.locator('.dv-ai-robot-preview__frame').screenshot({path:'reports/visual/ai-robot-motion-celebrate.png'});
+ assert.equal(motionIdle.equals(motionRoll),false,'roll must differ from idle');
+ assert.equal(motionRoll.equals(motionHappy),false,'roll must differ from happy');
+ assert.equal(motionHappy.equals(motionCelebrate),false,'celebrate must differ from happy');
+ await motion.getByRole('button',{name:'idle',exact:true}).click();
+ await page.waitForTimeout(700);
+ assert.match(await page.locator('.dv-ai-robot-preview__output').innerText(),/idle/);
  assert.deepEqual(errors,[]);
- console.log('AI_ROBOT_FEEDBACK_BROWSER_PASS: bundled GLB, TR/EN messages, priority, expiry/idle, happy/sleepy/surprised/blink actual eye textures and antenna feedback');
+ console.log('AI_ROBOT_FEEDBACK_BROWSER_PASS: bundled GLB, TR/EN messages, priority, expiry/idle, facial expressions plus distinct roll/happy/celebrate body motion');
 }finally{await browser.close()}

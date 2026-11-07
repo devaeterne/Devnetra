@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { Box3, Group, MathUtils, Mesh, MeshStandardMaterial, Object3D, Quaternion, Vector3 } from 'three';
-import { robotPalettes, materialRole, aiRobotGroups, aiRobotMoodFor, aiRobotMoodLight, type AiRobotMood, type AiRobotGroupName, type RobotPalette, type RobotExpression, type MimoAction } from '@devnetra/characters';
+import { robotPalettes, materialRole, aiRobotGroups, aiRobotMoodFor, aiRobotMoodLight, aiRobotMotionPose, type AiRobotMood, type AiRobotGroupName, type RobotPalette, type RobotExpression, type MimoAction } from '@devnetra/characters';
 import {createAiRobotFace} from './ai-robot-face';
 
 function RobotMesh({src,palette,expression,action,serial,onError,onLoaded}:{src:string;palette:RobotPalette;expression:RobotExpression;action:MimoAction;serial:number;onError:(reason:string)=>void;onLoaded:()=>void}) {
@@ -112,7 +112,6 @@ function RobotMesh({src,palette,expression,action,serial,onError,onLoaded}:{src:
   const now=state.clock.elapsedTime;
   progress.current+=Math.min(dt,.06);
   const t=progress.current;
-  const motion=reduced.current?0:1;
   const mood=aiRobotMoodLight[aiRobotMoodFor(action,expression)];
   const moodName=aiRobotMoodFor(action,expression);
   const pulse=1+(reduced.current?0:Math.sin(now*(action==='celebrate'?9:3.5))*mood.pulse);
@@ -131,38 +130,27 @@ function RobotMesh({src,palette,expression,action,serial,onError,onLoaded}:{src:
   const antennaTarget=mood.antenna*pulse;
   for(const mat of eyes.current)mat.emissiveIntensity=MathUtils.damp(mat.emissiveIntensity,eyeTarget,9,dt);
   for(const mat of antennaLights.current)mat.emissiveIntensity=MathUtils.damp(mat.emissiveIntensity,antennaTarget,9,dt);
-  const happy=action==='happy'||(action==='idle'&&expression==='excited');
-  const celebrate=action==='celebrate';
-  const sleepy=action==='sleep'||(action==='idle'&&expression==='sleepy');
-  const oops=action==='oops'||(action==='idle'&&expression==='oops');
-  const waving=action==='wave';
-  const thinking=action==='think'||(action==='idle'&&expression==='thinking');
-  const roll=action==='walk';
-  const blink=action==='blink';
-  const targetY=motion*(celebrate?Math.abs(Math.sin(t*9))*.18:happy?Math.abs(Math.sin(t*6))*.07:Math.sin(now*1.3)*.035);
-  root.current.position.y=MathUtils.damp(root.current.position.y,targetY,8,dt);
-  root.current.rotation.z=MathUtils.damp(root.current.rotation.z,
-    motion*(oops?-.08:celebrate?Math.sin(t*9)*.08:0),8,dt);
-  // Animate the original named joints and preserve each source quaternion:
-  // the Sketchfab source has non-identity, axis-conversion transforms.
+  const target=aiRobotMotionPose(action,t,reduced.current);
+  // In-place roll preview: wheels move, scene position stays anchored.
+  root.current.position.y=MathUtils.damp(root.current.position.y,target.bob,8,dt);
+  root.current.rotation.z=MathUtils.damp(root.current.rotation.z,target.lean,8,dt);
+  root.current.rotation.y=MathUtils.damp(root.current.rotation.y,target.turn,8,dt);
+  root.current.rotation.x=MathUtils.damp(root.current.rotation.x,target.pitch,8,dt);
   const pose=(name:AiRobotGroupName,angle:number,axisDirection:'x'|'y'|'z'='x')=>{
     const part=nodes.current[name],initial=sourceRotations.current[name];
     if(!part||!initial)return;
     axis.current.set(axisDirection==='x'?1:0,axisDirection==='y'?1:0,axisDirection==='z'?1:0);
-    // Convert stable world-space gesture axes into the parent's local coordinates.
-    // This avoids applying arm swings around the Sketchfab FBX conversion axes.
     part.parent?.getWorldQuaternion(rotationDelta.current);
     axis.current.applyQuaternion(rotationDelta.current.invert()).normalize();
-    rotationDelta.current.setFromAxisAngle(axis.current,angle*motion);
+    rotationDelta.current.setFromAxisAngle(axis.current,angle);
     part.quaternion.slerp(rotationDelta.current.multiply(initial.clone()),Math.min(1,dt*12));
   };
-  pose('Head',sleepy?-.18:thinking?.2:oops?-.15:celebrate?-.09:0,'z');
-  pose('LeftArm',celebrate?-1.9:happy?-.65:thinking?-.25:0,'z');
-  pose('RightArm',celebrate?1.9:waving?2+Math.sin(t*11)*.2:happy?.65:0,'z');
-  pose('LeftWheel',roll?t*6:0,'x');
-  pose('RightWheel',roll?t*6:0,'x');
-  pose('Antenna',blink?.08*Math.sin(t*17):0,'z');
-  root.current.rotation.y=MathUtils.damp(root.current.rotation.y,motion*(roll?Math.sin(t*2)*.12:0),8,dt);
+  pose('Head',target.head,'z');
+  pose('LeftArm',target.leftArm,'z');
+  pose('RightArm',target.rightArm,'z');
+  pose('LeftWheel',target.leftWheel,'x');
+  pose('RightWheel',target.rightWheel,'x');
+  pose('Antenna',target.antenna,'z');
  });
  return object?<group ref={root}><primitive object={object}/></group>:null;
 }

@@ -50,11 +50,11 @@
 - [ ] New Kids component uses existing asset registry, fallback and role/label semantics.
 
 ### MSCT-06/07/08/09 — Motion & personality · OPEN
-- [x] Real-model head and both arm pivots use world-to-parent axis conversion and baseline source quaternions; visible waving/celebration confirmed in Chrome. Wheel rotation/long-duration drift checks remain OPEN.
+- [x] Real-model head and both arm pivots use world-to-parent axis conversion and baseline source quaternions; visible waving/celebration confirmed in Chrome. Named-wheel roll-in-place and bounded pure pose targets implemented; long-duration runtime drift checks remain OPEN.
 - [ ] Core actions: actual-model idle/wave/celebrate preview implemented, but return-to-idle/interrupt controller integration and human motion signoff remain.
 - [ ] Secondary: thinking/sleepy/oops/cool now drive typed eye and antenna brightness; head/arm reactions exist. Source Eyes mesh includes the face screen; runtime 1024x1024 UV texture now supports happy/sleepy/surprised/cool/oops eye shapes and blink without scaling the mesh. Wheel/all-expression acceptance remains open.
 - [x] Reuse shared action priorities and idle timeout; game-event preview verified on real bundled GLB in Chrome.
-- [ ] Verify reduced-motion, speed cap, interrupted actions, event replay and context loss; no endless drift.
+- [ ] Verify reduced-motion, speed cap, interrupted actions, event replay and context loss; no endless drift. Pure motion targets now have bounded finite values and zeroed reduced-motion poses; long-running live browser and context-loss QA still open.
 
 ### MSCT-10/11/12 — Speech & reactions · OPEN
 - [x] Anchored replacement-based bubble, automatic 3.2s timeout, screen reader announcement and reduced-motion styling; mobile human QA pending.
@@ -100,3 +100,5 @@
 - **2026-11-07 — Visual QA finding:** scaling Head_Eyes_0 collapses the black face panel because its source mesh includes the whole screen. Rejected that experiment. Kept original face geometry and tested mood-sensitive eye/antenna light; real independent blink remains OPEN (MSCT-08).
 
 - **2026-11-07 — MSCT-08 face atlas:** implemented procedural CanvasTexture for the original Head_Eyes_0 UV atlas without deforming the face screen. Happy, sleepy, surprised and blink checked with real-model Chrome screenshots. Texture is instance-local, disposed on unmount; unchanged licensed GLB. Human UX and eight-expression signoff pending.
+
+- **2026-11-07 — MSCT-06/07 motion improvements:** replaced ad hoc joint animation values with pure typed aiRobotMotionPose in packages/characters. Walk now shows bounded synchronized wheel rotation, modest body rock and arm counter-swing while anchored to the studio. Happy has balanced arm lift and bounce; celebrate has stronger two-arm lift. Reduced motion produces zero physical displacement. Real GLB Chrome screenshots for idle, roll, happy, celebrate inspected; browser motion regression and pure deterministic tests added. Long-duration device QA still pending.
