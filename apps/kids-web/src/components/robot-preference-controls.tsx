@@ -18,8 +18,10 @@ export function useRobotLocalPreferences(){
  const [status,setStatus]=useState<'unsaved'|'loaded'|'saved'|'reset'|'error'>('unsaved');
  const [ready,setReady]=useState(false);
  useEffect(()=>{
-  const saved=loadStoredRobotPreferences(window.localStorage);
-  if(saved){setPreferences(saved);setStatus('loaded');}
+  try{
+   const saved=loadStoredRobotPreferences(window.localStorage);
+   if(saved){setPreferences(saved);setStatus('loaded');}
+  }catch{setStatus('error');}
   setReady(true);
  },[]);
  function update(changes:Partial<StoredRobotPreferences>){
@@ -27,12 +29,14 @@ export function useRobotLocalPreferences(){
   setStatus('unsaved');
  }
  function save(){
-  const ok=saveStoredRobotPreferences(window.localStorage,preferences);
+  let ok=false;
+  try{ok=saveStoredRobotPreferences(window.localStorage,preferences);}catch{ok=false;}
   setStatus(ok?'saved':'error');
   return ok;
  }
  function reset(){
-  const ok=clearStoredRobotPreferences(window.localStorage);
+  let ok=false;
+  try{ok=clearStoredRobotPreferences(window.localStorage);}catch{ok=false;}
   if(ok){setPreferences(defaultStoredRobotPreferences);setStatus('reset');}
   else setStatus('error');
   return ok;
