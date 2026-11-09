@@ -13,7 +13,7 @@ type LocalStore=Pick<Storage,'getItem'|'setItem'|'removeItem'>;
 export function parseStoredRobotPreferences(raw:unknown):StoredRobotPreferences|null {
  if(!raw||typeof raw!=='object'||Array.isArray(raw))return null;
  const value=raw as Record<string,unknown>;
- if(value.version!==1||!value.preferences||typeof value.preferences!=='object'||Array.isArray(value.preferences))return null;
+ if(value.version!==1||value.preferences===null||typeof value.preferences!=='object'||Array.isArray(value.preferences))return null;
  const pref=value.preferences as Record<string,unknown>;
  // Invalid or partially corrupt records never silently modify user defaults.
  if(typeof pref.palette!=='string'||typeof pref.expression!=='string'
