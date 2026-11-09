@@ -19,7 +19,7 @@
 | MSCT-10 | Reusable speech-bubble component, queue/replace, TTL and mobile placement | P1 | MSCT-03 | DONE | G3 |
 | MSCT-11 | Localized child-friendly EN/TR bubble copy: Aferin, Harika, Süper, Try again, Think together | P1 | MSCT-10 | DONE | G3 |
 | MSCT-12 | Typed game events connecting animations, bubble and idempotent feedback | P0 | MSCT-09,11 | IN_PROGRESS | G3 |
-| MSCT-13 | Parent-approved local preference persistence, age track UX and reset | P1 | MSCT-04,08 | OPEN | G3 |
+| MSCT-13 | Parent-approved local preference persistence, age track UX and reset | P1 | MSCT-04,08 | IN_PROGRESS | G3 |
 | MSCT-14 | Accessible 2D fallback, context loss, network/mesh error and reduced motion | P0 | MSCT-03,09 | IN_PROGRESS | G1/G4 |
 | MSCT-15 | Actual-model browser, visual, keyboard, device, performance and regression suite | P0 | MSCT-04..14 | IN_PROGRESS | G4 |
 | MSCT-16 | Public delivery + credit/attribution + Vercel Blob/CDN URL (rights-gated) | P0 | MSCT-01,15 | IN_PROGRESS | G4 |
@@ -63,7 +63,7 @@
 - [x] Manual reaction buttons in development-only Character Studio; public Kids homepage untouched.
 
 ### MSCT-13/14/15/16/17/18 — Integrate & release · OPEN/BLOCKED
-- [ ] Persist allowed preferences locally with schema validation; parent-controlled nickname only.
+- [ ] Device-only robot preferences for five palettes, eight moods and 6–8 / 9–12 age tracks have been authored on review branch with explicit adult acknowledgement, schema versioning, strict allowlist, opt-in save and reset. **NOT YET TESTED**. No nickname, DOB, identity or XP stored; any future nickname feature requires a separate privacy/parent review.
 - [x] Real GLB 404, unavailable WebGL and synthetic context loss switch to 2D; retry reloads original GLB, speech/mini-lesson works in fallback. Mobile 390px and reduced motion pass. Slow network and broader device/manual checks pending.
 - [ ] `pnpm ci:local` on committed candidate, real-model Playwright + screenshots, mobile viewport/manual QA, visual contrast and file size budgets.
 - [ ] Release authorization and required attribution; no asset hosted publicly before permission evidence.
@@ -114,3 +114,5 @@
 - **2026-11-09 — MSCT-15 report extension (unverified draft):** The device test records viewport-specific 3D load durations, 44px+ keyboard-target dimensions, bubble horizontal visibility, 320/390px screenshots, simulated delayed GLB load and transition replay counts into ignored `reports/visual/mascot-device-qa.json`. These are diagnostic observations, not frame-rate, GPU memory or true device certification. The Mac remains offline; do not claim PASS until local browser execution.
 
 - **2026-11-09 — MSCT-15 actual local QA evidence (user-provided terminal log):** Tested detached worktree HEAD `e7cc4cd7b04f2345503f0e8063e3bd4ac7db5890`; `pnpm install --frozen-lockfile` PASS, `pnpm ci:local` PASS (governance/UI/docs/asset, ESLint, 15/15 typecheck, 15/15 tests, 8/8 build). `DEVNETRA_KIDS_URL=http://localhost:3000/dev/characters pnpm test:mascot-device-browser` PASS: `MSCT15_VIEWPORT_KEYBOARD_PASS` at 320/390/768/1280 px, `MSCT15_SLOW_NETWORK_PLACEHOLDER_PASS`, `MSCT15_ACTION_REPLAY_SMOKE_PASS 20 transitions`. **Scope limitation:** Browser connected to existing `localhost:3000` main application (base `9f8f510`), while test script executed from detached branch checkout; tests certify that application under the test harness, not a separately launched branch build. No cross-browser/device/FPS/GPU-memory/human accessibility verification. MSCT-15 remains IN_PROGRESS until full acceptance; ready to merge **test harness only** into main.
+
+- **2026-11-09 — MSCT-13 parent preference draft (NOT TESTED):** Added version-1 strict allowlisted device storage for palette, expression and age track (`6-8`/`9-12`) only, with opt-in adult acknowledgement and explicit Save on this device button, reset/delete, safe default on damaged JSON and guarded localStorage access. Live preview changes remain session-only unless saved. Added unit tests for schema, round-trip, no PII serialization and denied storage; Playwright test for no-save-before-consent, persistence after reload, reset and corrupt data. This is an *adult acknowledgement UI*, not proof of adult identity or parental authentication. Kids production integration, human accessibility signoff and local CI/browser tests remain OPEN because authorized Mac is offline; do not merge or mark DONE before running them. MSCT-01 rights evidence remains blocked.
