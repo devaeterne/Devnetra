@@ -10,6 +10,7 @@ const browser=await chromium.launch({
   channel:'chrome',headless:true,
   args:['--enable-webgl','--use-angle=swiftshader','--disable-gpu-sandbox'],
 });
+await mkdir('reports/visual',{recursive:true});
 const collectErrors=page=>{
   const errors=[];
   page.on('pageerror',error=>errors.push(error.message));
