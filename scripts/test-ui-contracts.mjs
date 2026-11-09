@@ -42,7 +42,7 @@ assert.equal(candidate.license,'Sketchfab Free Standard');
 assert.equal(candidate.status,'bundled');
 assert.equal(candidate.permission,'user-attested-publishing-approval');
 assert.equal(candidate.bundledPath,'/assets/characters/ai-robot.glb');
-assert.match(read('apps/kids-web/src/components/ai-robot-preview.tsx'),/sketchfab.com\/models/);
+assert.match(read('apps/kids-web/src/components/ai-robot-preview.tsx'),/sketchfab.com\/3d-models/);
 assert.match(read('apps/kids-web/src/app/dev/characters/page.tsx'),/NODE_ENV/);
 assert.ok(fs.existsSync(path.join(root,'apps/kids-web/public/assets/characters/ai-robot.glb')),'user-authorized AI Robot GLB must be bundled');
 assert.ok(!fs.existsSync(path.join(root,'.github/workflows')),'hosted CI forbidden');

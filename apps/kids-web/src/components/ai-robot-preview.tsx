@@ -6,6 +6,7 @@ import {type RobotPalette,type RobotExpression,robotPalettes,robotExpressions,de
 import {useMascotGameFeedback} from './use-mascot-game-feedback';
 import {MascotMiniChallenge} from './mascot-mini-challenge';
 import {MascotBubble, type MascotBubbleMessage} from './mascot-bubble';
+import {AiRobotFallback,AiRobotErrorBoundary,hasWebGLSupport} from './ai-robot-fallback';
 
 const modelId='f7c4e4dcd1594e3e92b2d35a4ec8a93a';
 const AiRobotCanvas=dynamic(()=>import('./ai-robot-canvas').then(mod=>mod.AiRobotCanvas),{ssr:false});
@@ -42,6 +43,13 @@ export function AiRobotPreview() {
   const [localUrl,setLocalUrl]=useState('');
   const [loaded,setLoaded]=useState(false);
   const [error,setError]=useState('');
+  const [webgl,setWebgl]=useState<'checking'|'supported'|'unsupported'>('checking');
+  const [retryKey,setRetryKey]=useState(0);
+  const fail=useCallback((reason:string)=>{setError(current=>current||reason);setLoaded(false)},[]);
+  useEffect(()=>{setWebgl(hasWebGLSupport()?'supported':'unsupported')},[retryKey]);
+  function retry(){
+    setLoaded(false);setError('');setRetryKey(value=>value+1);
+  }
   const previous=useRef<string|null>(null);
   const src=localUrl||allowedUrl||assetRegistry['kids.robot.ai-robot'].bundledPath||'';
 
@@ -54,15 +62,29 @@ export function AiRobotPreview() {
     if(previous.current)URL.revokeObjectURL(previous.current);
     const url=URL.createObjectURL(file);previous.current=url;
     setLoaded(false);setError('');setLocalUrl(url);
+    setRetryKey(value=>value+1);
   }
   return <section className="dv-ai-robot-preview" aria-label="AI Robot character editor">
     <header><h2>AI Robot — Character editor</h2><p>Source: AI Robot by Noores on Sketchfab. Model is bundled for preview, and colors/actions work directly without uploading a file.</p></header>
-    <div className="dv-ai-robot-preview__frame" data-robot-mode={src?'editable':'external'}>
-      {src?<div className="dv-ai-robot-preview__canvas"><AiRobotCanvas src={src} palette={palette} expression={expression} action={animation.action} serial={animation.serial} onLoaded={()=>{setLoaded(true);setError('')}} onError={reason=>{setError(reason);setLoaded(false)}}/><span role="status" className="dv-ai-robot-preview__status">{loaded?'3D model loaded':error||'Loading 3D model…'}</span>
+    <div className="dv-ai-robot-preview__frame" data-robot-mode={src&&webgl==='supported'&&!error?'editable':'fallback'}>
+      <div className="dv-ai-robot-preview__canvas">
+        {(!loaded||error||webgl!=='supported')&&<AiRobotFallback label={locale==='tr'?'Sevimli robot maskot':'Friendly robot mascot'}/>}
+        {src&&webgl==='supported'&&!error&&<div className="dv-ai-robot-preview__webgl" aria-hidden="true">
+          <AiRobotErrorBoundary key={src+retryKey} onError={fail}>
+            <AiRobotCanvas src={src} palette={palette} expression={expression} action={animation.action} serial={animation.serial}
+              onLoaded={()=>{setLoaded(true);setError('')}} onError={fail}/>
+          </AiRobotErrorBoundary>
+        </div>}
+        <span role="status" className="dv-ai-robot-preview__status">
+          {webgl==='checking'?'Checking 3D graphics…':webgl==='unsupported'?'2D mode: WebGL unavailable':error?'2D mode: '+error:loaded?'3D model loaded':'Loading 3D model…'}
+        </span>
         <MascotBubble message={bubble} locale={locale} onExpire={expireBubble}/>
-      </div>:
-      <iframe title="AI Robot by Noores on Sketchfab" src={'https://sketchfab.com/models/'+modelId+'/embed?autostart=0&ui_theme=dark'} allow="autoplay; fullscreen; xr-spatial-tracking" allowFullScreen loading="lazy" referrerPolicy="strict-origin-when-cross-origin"/>}
+      </div>
     </div>
+    {(error||webgl==='unsupported')&&<div className="dv-ai-robot-preview__recovery" role="status">
+      <p>{locale==='tr'?'3D görüntü şu anda kullanılamıyor. 2D robotla devam edebilirsin.':'3D graphics are unavailable. You can continue with the 2D robot.'}</p>
+      <button type="button" onClick={retry}>{locale==='tr'?'3D tekrar dene':'Retry 3D'}</button>
+    </div>}
     <a href={'https://sketchfab.com/3d-models/ai-robot-'+modelId} target="_blank" rel="noopener noreferrer">Open original model on Sketchfab</a>
     <label className="dv-ai-robot-preview__label">Optional: preview another authorized .glb file (up to 30 MB)
       <input aria-label="Choose AI Robot GLB" type="file" accept=".glb,model/gltf-binary" onChange={event=>choose(event.target.files?.[0])}/>

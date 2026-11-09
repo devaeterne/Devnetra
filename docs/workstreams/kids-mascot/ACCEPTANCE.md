@@ -41,9 +41,9 @@ All boxes below are **unverified** until dated evidence, committed SHA and requi
 | Gate | Status | SHA | Evidence |
 |---|---|---|---|
 | G0 | OPEN / permission subtask BLOCKED | — | Real files supplied, public redistribution grant scope not archived |
-| G1 | PARTIAL | — | Real GLB five palettes, non-deforming UV face expressions and Eyes/antenna light mapping; visual/accessibility signoff pending |
+| G1 | PARTIAL | — | Real GLB five palettes/face mapping; 2D fallback for GLB 404, no WebGL and context loss tested; slow-network and visual/accessibility signoff pending |
 | G2 | PARTIAL | — | Actual model wave/happy/celebrate and in-place wheel roll demonstrated; long-duration stability, reduced-motion browser and state-machine/cooldown acceptance pending |
 | G3 | PARTIAL | — | Real GLB mini-lesson desktop/mobile reduced-motion Chrome PASS; event ID deduplication, priority, restart and EN/TR PASS. Actual production game scoring and child-facing QA pending |
-| G4 | OPEN | — | Planned |
+| G4 | PARTIAL | — | Real GLB and 2D fallback browser tests (desktop/mobile) PASS locally; long-duration, device and human signoff pending |
 
 Current scripts: \`pnpm ci:local\`, \`pnpm test:mascot\`, \`pnpm test:visual\`, \`pnpm test:ai-robot-editor\`. Future real-model tests must not assume proprietary GLB can be checked into a public repo.

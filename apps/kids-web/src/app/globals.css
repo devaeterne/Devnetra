@@ -61,3 +61,13 @@ body{font-family:system-ui,-apple-system,sans-serif;margin:0;background:var(--dv
 .dv-mascot-challenge button:hover:not(:disabled),.dv-mascot-challenge button:focus-visible{background:#eae2ff;outline-offset:3px}
 .dv-mascot-challenge button:disabled{opacity:.45;cursor:default}
 .dv-mascot-challenge__status{min-height:25px;font-weight:700}
+
+.dv-ai-robot-preview__webgl{position:absolute;inset:0;z-index:2}
+.dv-ai-robot-fallback{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;background:radial-gradient(circle at 50% 46%,#ccefff,#e7ebf7 75%)}
+.dv-ai-robot-fallback .dv-character{transform:scale(1.45);transform-origin:center}
+.dv-ai-robot-preview__status{z-index:4}
+.dv-ai-robot-preview__recovery{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin:12px 0}
+.dv-ai-robot-preview__recovery p{margin:0}
+.dv-ai-robot-preview__recovery button{min-height:44px;padding:9px 16px;border-radius:12px;border:2px solid #7552c9;background:#fff;color:#25134d;font:inherit;font-weight:750;cursor:pointer}
+@media(max-width:620px){.dv-ai-robot-fallback .dv-character{transform:scale(.9)}}
+@media(prefers-reduced-motion:reduce){.dv-ai-robot-fallback *, .dv-ai-robot-fallback *::before,.dv-ai-robot-fallback *::after{animation:none!important;transition:none!important}}

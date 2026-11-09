@@ -64,7 +64,7 @@
 
 ### MSCT-13/14/15/16/17/18 — Integrate & release · OPEN/BLOCKED
 - [ ] Persist allowed preferences locally with schema validation; parent-controlled nickname only.
-- [ ] Real GLB failures fall back to 2D; check slow network, missing parts, WebGL unavailable and `prefers-reduced-motion`.
+- [x] Real GLB 404, unavailable WebGL and synthetic context loss switch to 2D; retry reloads original GLB, speech/mini-lesson works in fallback. Mobile 390px and reduced motion pass. Slow network and broader device/manual checks pending.
 - [ ] `pnpm ci:local` on committed candidate, real-model Playwright + screenshots, mobile viewport/manual QA, visual contrast and file size budgets.
 - [ ] Release authorization and required attribution; no asset hosted publicly before permission evidence.
 - [ ] Replace homepage only after G0–G4; ensure mobile is explicitly tested or deferred.
@@ -106,3 +106,5 @@
 - **2026-11-07 — MSCT-12 preparation (review branch):** Created a typed, bounded, ephemeral mascot game-event reducer. It rejects duplicate logical event IDs, retains high-priority reactions, returns expired animations to idle, and deliberately never changes XP or child profiles. Unit tests were authored, but local `pnpm ci:local` and browser tests were **NOT RUN** because the authorized Mac is offline. Do not mark DONE/VERIFIED or merge to main before local checks and integration with actual game logic.
 
 - **2026-11-07 — MSCT-12 demo integration:** Mac connection restored. A development-only 2+3 mini learning task now sends deduplicated typed game events to the shared mascot controller for wrong/correct/hint/complete/restart; no persistent XP or child data. Branch local CI PASS (15 typechecks, 15 tests, 8 builds), reducer unit tests PASS (4), real GLB Chrome feedback regression PASS, desktop 1280 px and mobile 390 px reduced-motion mini challenge PASS. Production Kids lessons/scoring do not yet exist, so MSCT-12 stays IN_PROGRESS. MSCT-14/15 moved to IN_PROGRESS for wider accessibility/fallback/device checks.
+
+- **2026-11-09 — MSCT-14 initial 2D fallback:** separate worktree adds a real 2D Kids robot while 3D loads or fails. WebGL probe, React canvas error boundary, context loss watcher and retry flow are development-only Character Studio integrations. 2D mode keeps typed game events and localized speech bubbles alive. Playwright test covers bundled GLB, mocked GLB HTTP 404 + recovery, no-WebGL mobile, synthetic context lost and mobile reduced-motion. Browser cases PASS, but human accessibility, slow-network and browser coverage remain OPEN; status IN_PROGRESS.

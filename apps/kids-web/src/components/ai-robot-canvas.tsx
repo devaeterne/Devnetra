@@ -6,6 +6,7 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { Box3, Group, MathUtils, Mesh, MeshStandardMaterial, Object3D, Quaternion, Vector3 } from 'three';
 import { robotPalettes, materialRole, aiRobotGroups, aiRobotMoodFor, aiRobotMoodLight, aiRobotMotionPose, type AiRobotMood, type AiRobotGroupName, type RobotPalette, type RobotExpression, type MimoAction } from '@devnetra/characters';
 import {createAiRobotFace} from './ai-robot-face';
+import {AiRobotContextGuard} from './ai-robot-fallback';
 
 function RobotMesh({src,palette,expression,action,serial,onError,onLoaded}:{src:string;palette:RobotPalette;expression:RobotExpression;action:MimoAction;serial:number;onError:(reason:string)=>void;onLoaded:()=>void}) {
  const [object,setObject]=useState<Group|null>(null);
@@ -156,11 +157,14 @@ function RobotMesh({src,palette,expression,action,serial,onError,onLoaded}:{src:
 }
 
 export function AiRobotCanvas({src,palette,expression,action,serial=0,onLoaded,onError}:{src:string;palette:RobotPalette;expression:RobotExpression;action:MimoAction;serial?:number;onLoaded:()=>void;onError:(reason:string)=>void}) {
- return <Canvas dpr={[1,1.75]} camera={{position:[0,1,5.6],fov:42}} shadows gl={{alpha:true,antialias:true}}>
+ const [canvas,setCanvas]=useState<HTMLCanvasElement|null>(null);
+ return <>
+ <AiRobotContextGuard canvas={canvas} onError={onError}/>
+ <Canvas onCreated={({gl})=>setCanvas(gl.domElement)} dpr={[1,1.75]} camera={{position:[0,1,5.6],fov:42}} shadows gl={{alpha:true,antialias:true}}>
   <ambientLight intensity={.95}/>
   <hemisphereLight args={['#fff4fb','#9be9ff',1.15]}/>
   <directionalLight position={[-3,5,5]} intensity={2.2} color="#fff4dd" castShadow/>
   <pointLight position={[3,2,2]} intensity={9} color="#d4b4ff" distance={8}/>
   <RobotMesh src={src} palette={palette} expression={expression} action={action} serial={serial} onLoaded={onLoaded} onError={onError}/>
- </Canvas>;
+ </Canvas></>;
 }
