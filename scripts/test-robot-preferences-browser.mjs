@@ -32,7 +32,9 @@ try{
  console.log('MSCT13_PARENT_APPROVED_DEVICE_SAVE_PASS');
 
  await page.reload({waitUntil:'domcontentloaded'});
- await prefs.getByRole('button',{name:'violet',exact:true}).waitFor();
+ // Wait until the client effect has read localStorage and committed its state.
+ // Button existence alone is insufficient: it is already rendered in the SSR default state.
+ await prefs.getByText('Bu cihazdaki ayarlar yüklendi.',{exact:true}).waitFor({timeout:10000});
  assert.equal(await prefs.getByRole('button',{name:'violet',exact:true}).getAttribute('aria-pressed'),'true');
  assert.equal(await prefs.getByLabel('Expression preset').inputValue(),'thinking');
  assert.equal(await prefs.getByLabel('Learning age track').inputValue(),'9-12');
@@ -47,7 +49,7 @@ try{
 
  await page.evaluate(k=>localStorage.setItem(k,'{invalid'),storageKey);
  await page.reload({waitUntil:'domcontentloaded'});
- await prefs.getByRole('button',{name:'ocean',exact:true}).waitFor();
+ await prefs.getByText('Değişiklikler yalnızca bu oturumda.',{exact:true}).waitFor({timeout:10000});
  assert.equal(await prefs.getByRole('button',{name:'ocean',exact:true}).getAttribute('aria-pressed'),'true');
  console.log('MSCT13_CORRUPT_STORAGE_SAFE_DEFAULT_PASS');
 
