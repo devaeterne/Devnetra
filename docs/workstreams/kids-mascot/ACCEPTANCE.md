@@ -47,3 +47,7 @@ All boxes below are **unverified** until dated evidence, committed SHA and requi
 | G4 | PARTIAL | — | Real GLB and 2D fallback browser tests (desktop/mobile) PASS locally; long-duration, device and human signoff pending |
 
 Current scripts: \`pnpm ci:local\`, \`pnpm test:mascot\`, \`pnpm test:visual\`, \`pnpm test:ai-robot-editor\`. Future real-model tests must not assume proprietary GLB can be checked into a public repo.
+
+## MSCT-15 human/device execution protocol
+
+Use [DEVICE_ACCESSIBILITY_QA.md](DEVICE_ACCESSIBILITY_QA.md) to record real iPhone/Safari, Android/Chrome, VoiceOver/TalkBack, keyboard, 200% zoom, contrast, real hardware performance and child-friendly UX review. Protocol preparation is **not** execution evidence. As of 2026-11-11, all these manual fields are **NOT RUN**; G4 remains PARTIAL, and G0 license permission remains BLOCKED.
