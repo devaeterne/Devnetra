@@ -19,7 +19,8 @@
     "test:ai-robot-real": "node scripts/test-ai-robot-real-browser.mjs",
     "test:mascot-mini-browser": "node scripts/test-mascot-mini-challenge-browser.mjs",
     "test:mascot-fallback-browser": "node scripts/test-ai-robot-fallback-browser.mjs",
-    "test:mascot-device-browser": "node scripts/test-ai-robot-device-stability-browser.mjs"
+    "test:mascot-device-browser": "node scripts/test-ai-robot-device-stability-browser.mjs",
+    "test:mascot-preferences-browser": "node scripts/test-robot-preferences-browser.mjs"
   },
   "devDependencies": {
     "@eslint/js": "^9.0.0",

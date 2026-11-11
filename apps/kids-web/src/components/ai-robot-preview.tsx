@@ -2,20 +2,20 @@
 import dynamic from 'next/dynamic';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { assetRegistry } from '@devnetra/assets';
-import {type RobotPalette,type RobotExpression,robotPalettes,robotExpressions,defaultRobotPreferences,mimoActions,type MimoEvent,type MascotGameEvent, type MascotLocale} from '@devnetra/characters';
+import {mimoActions,type MimoEvent,type MascotGameEvent, type MascotLocale} from '@devnetra/characters';
 import {useMascotGameFeedback} from './use-mascot-game-feedback';
 import {MascotMiniChallenge} from './mascot-mini-challenge';
 import {MascotBubble, type MascotBubbleMessage} from './mascot-bubble';
 import {AiRobotFallback,AiRobotErrorBoundary,hasWebGLSupport} from './ai-robot-fallback';
+import {RobotPreferenceControls,useRobotLocalPreferences} from './robot-preference-controls';
 
 const modelId='f7c4e4dcd1594e3e92b2d35a4ec8a93a';
 const AiRobotCanvas=dynamic(()=>import('./ai-robot-canvas').then(mod=>mod.AiRobotCanvas),{ssr:false});
 const configuredUrl=process.env.NEXT_PUBLIC_ROBOT_MODEL_URL?.trim()??'';
 const allowedUrl=(()=>{if(!configuredUrl)return '';try{const u=new URL(configuredUrl);return u.protocol==='https:'&&u.pathname.toLowerCase().endsWith('.glb')?u.href:''}catch{return ''}})();
-const expressionLabels:Record<RobotExpression,string>={happy:'Happy',thinking:'Thinking',excited:'Excited',surprised:'Surprised',sleepy:'Sleepy',cool:'Cool',oops:'Oops',celebrate:'Celebrate'};
 export function AiRobotPreview() {
-  const [palette,setPalette]=useState<RobotPalette>(defaultRobotPreferences.palette);
-  const [expression,setExpression]=useState<RobotExpression>(defaultRobotPreferences.expression);
+  const preferenceController=useRobotLocalPreferences();
+  const {palette,expression}=preferenceController.preferences;
   const animation=useMascotGameFeedback();
   const [locale,setLocale]=useState<MascotLocale>('tr');
   const [bubble,setBubble]=useState<MascotBubbleMessage|null>(null);
@@ -91,15 +91,7 @@ export function AiRobotPreview() {
     </label>
     <p>The bundled AI Robot loads automatically. An optional custom file remains local to your browser session. No file upload is required.</p>
     {error&&<p role="alert">{error}</p>}
-    <h3>Robot colors</h3>
-    <div className="dv-ai-robot-preview__colors" role="group" aria-label="Robot color palette">
-      {(Object.keys(robotPalettes) as RobotPalette[]).map(name=><button key={name} type="button" aria-pressed={palette===name} onClick={()=>setPalette(name)}><span className="dv-ai-robot-preview__swatch" style={{background:robotPalettes[name].shell}}/>{name}</button>)}
-    </div>
-    <label className="dv-ai-robot-preview__label">Expression preset
-      <select value={expression} onChange={event=>setExpression(event.target.value as RobotExpression)}>
-        {robotExpressions.map(v=><option key={v} value={v}>{expressionLabels[v]}</option>)}
-      </select>
-    </label>
+    <RobotPreferenceControls controller={preferenceController} locale={locale}/>
     <h3>Motion preview</h3>
     <div className="dv-ai-robot-preview__colors" role="group" aria-label="Robot animation actions">
      {mimoActions.map(v=><button type="button" key={v} aria-pressed={animation.action===v} onClick={()=>animation.play(v)}>{v}</button>)}

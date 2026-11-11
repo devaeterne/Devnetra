@@ -1,3 +1,4 @@
+export * from './preference-storage.js';
 export * from './game-feedback.js';
 export * from './ai-robot-motion.js';
 export * from './ai-robot-mood.js';

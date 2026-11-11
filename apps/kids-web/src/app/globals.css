@@ -71,3 +71,13 @@ body{font-family:system-ui,-apple-system,sans-serif;margin:0;background:var(--dv
 .dv-ai-robot-preview__recovery button{min-height:44px;padding:9px 16px;border-radius:12px;border:2px solid #7552c9;background:#fff;color:#25134d;font:inherit;font-weight:750;cursor:pointer}
 @media(max-width:620px){.dv-ai-robot-fallback .dv-character{transform:scale(.9)}}
 @media(prefers-reduced-motion:reduce){.dv-ai-robot-fallback *, .dv-ai-robot-fallback *::before,.dv-ai-robot-fallback *::after{animation:none!important;transition:none!important}}
+
+.dv-robot-preferences{margin-top:24px;padding:18px;border:2px solid var(--dv-border);border-radius:20px;background:var(--dv-surface)}
+.dv-robot-preferences h3{margin:0 0 8px}
+.dv-robot-preferences .dv-ai-robot-preview__label{margin:14px 0}
+.dv-robot-preferences__approval{display:flex;align-items:flex-start;gap:12px;line-height:1.5;margin:16px 0;font-weight:650}
+.dv-robot-preferences__approval input{width:22px;height:22px;flex:0 0 22px;accent-color:var(--dv-primary)}
+.dv-robot-preferences__actions{display:flex;flex-wrap:wrap;gap:10px}
+.dv-robot-preferences__actions button{min-height:48px;padding:10px 16px;border:2px solid var(--dv-border);border-radius:12px;background:var(--dv-surface-raised);color:var(--dv-text);font:inherit;font-weight:750;cursor:pointer}
+.dv-robot-preferences__actions button:disabled{opacity:.5;cursor:not-allowed}
+.dv-robot-preferences__actions button:focus-visible,.dv-robot-preferences__approval input:focus-visible{outline:3px solid var(--dv-focus);outline-offset:3px}
